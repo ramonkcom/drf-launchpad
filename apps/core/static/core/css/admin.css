@@ -1,0 +1,4 @@
+/* Remove redundant titles on `User` inlines (e.g. `Person` string representation) */
+.inline-related h3 {
+  display: none;
+}

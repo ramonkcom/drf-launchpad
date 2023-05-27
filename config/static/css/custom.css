@@ -1,0 +1,4 @@
+/* Prevent inline groups' titles from being set to uppercase */
+.inline-group h2 {
+  text-transform: unset;
+}
