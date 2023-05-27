@@ -56,6 +56,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # THIRD-PARTY
+
+    # PROJECT
+    'apps.core.apps.CoreConfig',
 ]
 
 # https://docs.djangoproject.com/en/4.2/ref/settings/#middleware
@@ -105,6 +110,9 @@ DATABASES = {
 # ---------------------------------------------------------------------------- #
 #                                AUTHENTICATION                                #
 # ---------------------------------------------------------------------------- #
+
+# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-user-model
+AUTH_USER_MODEL = 'core.User'
 
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
