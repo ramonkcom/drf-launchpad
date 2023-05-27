@@ -1,0 +1,31 @@
+{
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  // https://code.visualstudio.com/docs/python/linting
+  "python.formatting.provider": "none",
+  // LINTING
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": [
+    "--disable=C0111,C0415,W0212,W0611,W0613,W0702",
+    "--load-plugins=pylint_django",
+    "--django-settings-module=config.settings"
+  ],
+  "files.trimTrailingWhitespace": true,
+  "comment-divider.length": 80,
+  // JSON
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "docwriter.style": "Google",
+  "docwriter.progress.trackClasses": true,
+  "docwriter.progress.trackTypes": true,
+  "workbench.settings.openDefaultSettings": true
+}
