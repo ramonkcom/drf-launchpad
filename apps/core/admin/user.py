@@ -17,7 +17,7 @@ class UserAdmin(auth_admin.UserAdmin):
 
     inlines = [PersonInline,]
 
-    list_display = ['id', 'email', 'username',
+    list_display = ['id', 'email', 'username', 'full_name',
                     'is_active', 'is_staff', 'is_superuser',]
 
     list_display_links = ['id', 'email', 'username',]
