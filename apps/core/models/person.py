@@ -80,8 +80,7 @@ class Person(models.Model):
             str: The string representation of the person.
         """
 
-        representation = ' '.join(
-            [n for n in [self.given_name, self.family_name,] if n])
+        representation = self.full_name
 
         if not representation:
             representation = str(self.user)
