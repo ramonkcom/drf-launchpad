@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # THIRD-PARTY
+    'rest_framework',
 
     # PROJECT
     'apps.core.apps.CoreConfig',
