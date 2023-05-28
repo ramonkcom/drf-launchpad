@@ -5,6 +5,7 @@ from django.db.models.signals import (
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.db.models import QuerySet
 from django.dispatch import receiver
 
 from ..models import Person
@@ -21,7 +22,8 @@ def prevent_person_direct_deletion(sender, instance, using, origin, **kwargs):
         origin (cls): The Model or QuerySet class originating the deletion.
     """
 
-    if isinstance(origin, get_user_model()):
+    if (isinstance(origin, get_user_model()) or (
+            isinstance(origin, QuerySet) and origin.model == get_user_model())):
         return
 
     error_msg = _('Can\'t delete a person directly.')
