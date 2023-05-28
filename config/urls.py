@@ -19,6 +19,10 @@ from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
 )
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import RedirectView
@@ -36,4 +40,10 @@ urlpatterns = [
 
     path('api/docs/',
          SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
+
+    path('api/token/',
+         TokenObtainPairView.as_view(), name='token-obtain'),
+
+    path('api/token/refresh/',
+         TokenRefreshView.as_view(), name='token-refresh'),
 ]

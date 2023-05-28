@@ -21,8 +21,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # THIRD-PARTY
-    'rest_framework',
     'drf_spectacular',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 
     # PROJECT
     'apps.core.apps.CoreConfig',
