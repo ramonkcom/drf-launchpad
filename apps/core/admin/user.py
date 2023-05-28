@@ -24,6 +24,9 @@ class UserAdmin(auth_admin.UserAdmin):
 
     list_filter = ['is_active', 'is_staff', 'is_superuser',]
 
+    search_fields = ['username', 'email',
+                     'person__given_name', 'person__family_name',]
+
     def get_fieldsets(self, request, obj=None):
         """Returns the fieldsets for the `User` change pages.
         """
