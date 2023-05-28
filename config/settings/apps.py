@@ -22,6 +22,7 @@ INSTALLED_APPS = [
 
     # THIRD-PARTY
     'rest_framework',
+    'drf_spectacular',
 
     # PROJECT
     'apps.core.apps.CoreConfig',
