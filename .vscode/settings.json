@@ -9,12 +9,12 @@
     "editor.defaultFormatter": "ms-python.autopep8"
   },
   // https://code.visualstudio.com/docs/python/linting
-  "python.formatting.provider": "none",
+  "python.formatting.provider": "autopep8",
   // LINTING
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": true,
   "python.linting.pylintArgs": [
-    "--disable=C0111,C0415,W0212,W0611,W0613,W0702",
+    "--disable=C0111,C0415,E1101,W0212,W0611,W0613,W0702",
     "--load-plugins=pylint_django",
     "--django-settings-module=config.settings"
   ],
