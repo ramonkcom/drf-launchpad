@@ -17,12 +17,15 @@ class UserAdmin(auth_admin.UserAdmin):
 
     inlines = [PersonInline,]
 
-    list_display = ['id', 'email', 'username',
+    list_display = ['id', 'email', 'username', 'full_name',
                     'is_active', 'is_staff', 'is_superuser',]
 
     list_display_links = ['id', 'email', 'username',]
 
     list_filter = ['is_active', 'is_staff', 'is_superuser',]
+
+    search_fields = ['username', 'email',
+                     'person__given_name', 'person__family_name',]
 
     def get_fieldsets(self, request, obj=None):
         """Returns the fieldsets for the `User` change pages.

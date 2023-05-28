@@ -77,6 +77,38 @@ class User(AbstractBaseUser,
         },
     )
 
+    # -------------------------------- PROPERTIES -------------------------------- #
+
+    @property
+    def given_name(self) -> str:
+        """Returns the given name of the person.
+
+        Returns:
+            str: The given name of the person.
+        """
+
+        return self.person.given_name
+
+    @property
+    def family_name(self) -> str:
+        """Returns the family name of the person.
+
+        Returns:
+            str: The family name of the person.
+        """
+
+        return self.person.family_name
+
+    @property
+    def full_name(self) -> str:
+        """Returns the full name of the person.
+
+        Returns:
+            str: The full name of the person.
+        """
+
+        return self.person.full_name
+
     # ---------------------------------- METHODS --------------------------------- #
 
     def __str__(self) -> str:

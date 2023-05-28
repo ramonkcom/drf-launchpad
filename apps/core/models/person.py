@@ -51,6 +51,23 @@ class Person(models.Model):
         verbose_name=_('family name'),
     )
 
+    # -------------------------------- PROPERTIES -------------------------------- #
+
+    @property
+    def full_name(self) -> str:
+        """Returns the full name of the person.
+
+        Returns the given name followed by the family name of the person.
+
+        Returns:
+            str: The full name of the person.
+        """
+
+        full_name = ' '.join(
+            [n for n in [self.given_name, self.family_name,] if n])
+
+        return full_name
+
     # ---------------------------------- METHODS --------------------------------- #
 
     def __str__(self) -> str:
@@ -63,8 +80,7 @@ class Person(models.Model):
             str: The string representation of the person.
         """
 
-        representation = ' '.join(
-            [n for n in [self.given_name, self.family_name,] if n])
+        representation = self.full_name
 
         if not representation:
             representation = str(self.user)
