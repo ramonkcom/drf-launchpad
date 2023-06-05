@@ -65,6 +65,8 @@ class User(AbstractBaseUser,
     username = models.CharField(
         verbose_name=_("username"),
         max_length=31,
+        null=True,
+        blank=True,
         unique=True,
         help_text=_(
             'Required. 31 characters or fewer. Letters, digits and ./_ only.'
