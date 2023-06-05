@@ -68,13 +68,13 @@ class User(AbstractBaseUser,
         blank=True,
         unique=True,
         help_text=_(
-            'Required. 31 characters or fewer. Letters, digits and ./_ only.'
+            '31 characters or fewer. Letters, digits and ./_ only.'
         ),
         validators=[validators.RegexValidator(
             regex=r"^[\w](?!.*?\.{2})[\w.]{1,29}[\w]$"
         ),],
         error_messages={
-            'unique': _('A user with that username already exists.'),
+            'unique': _('An user with that username already exists.'),
         },
     )
 
