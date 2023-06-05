@@ -8,9 +8,15 @@ from .views import (
 
 
 urlpatterns = [
-    path('obtain/', TokenObtainPairView.as_view(), name='token-obtain'),
+    path('token/obtain/',
+         TokenObtainPairView.as_view(),
+         name='token-obtain'),
 
-    path('refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path('token/refresh/',
+         TokenRefreshView.as_view(),
+         name='token-refresh'),
 
-    path('verify/', TokenVerifyView.as_view(), name='token-verify'),
+    path('token/verify/',
+         TokenVerifyView.as_view(),
+         name='token-verify'),
 ]
