@@ -6,27 +6,11 @@ from drf_spectacular.utils import inline_serializer
 from drf_spectacular.types import OpenApiTypes
 
 from rest_framework_simplejwt.views import (
-    TokenBlacklistView as SimpleJwtTokenBlacklistView,
     TokenObtainPairView as SimpleJwtTokenObtainPairView,
     TokenRefreshView as SimpleJwtTokenRefreshView,
     TokenVerifyView as SimpleJwtTokenVerifyView,
 )
 from rest_framework import serializers
-
-
-@extend_schema(
-    tags=['Authentication'],
-)
-@extend_schema_view(
-    post=extend_schema(
-        responses={
-            200: OpenApiTypes.NONE,
-        },
-    ),
-)
-class TokenBlacklistView(SimpleJwtTokenBlacklistView):
-    """Blacklists a JWT from refresh token.
-    """
 
 
 @extend_schema(
