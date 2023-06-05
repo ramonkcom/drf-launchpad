@@ -29,8 +29,12 @@ class UserManager(BaseUserManager):
         kwargs['username'] = kwargs.pop('username', None)
 
         if not kwargs['username']:
-            kwargs['username'] = email.split(
-                '@')[0] + '_' + str(int(datetime.now().timestamp()))[-5:]
+            email_username = email.split('@')[0]
+            kwargs['username'] = email_username
+
+            while self.model.objects.filter(username=kwargs['username']).exists():
+                timestamp_slice = str(int(datetime.now().timestamp()))[-5:]
+                kwargs['username'] = f'{email_username}_{timestamp_slice}'
 
         person = kwargs.pop('person', {})
 

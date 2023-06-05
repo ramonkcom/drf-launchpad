@@ -27,11 +27,13 @@ class UserModelTests(UserTestsMixin,
         """
 
         self.assertEqual(User.objects.count(), 0)
-        user = self.create_user(email='test@example.com')
+        user_1 = self.create_user(email='test@example1.com')
         self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(user_1.username, 'test')
 
+        user_2 = self.create_user(email='test@example2.com')
         auto_username = 'test_' + str(int(datetime.now().timestamp()))[-5:-2]
-        self.assertTrue(user.username.startswith(auto_username))
+        self.assertTrue(user_2.username.startswith(auto_username))
 
     def test_creating_user_creates_person(self):
         """Creating an `User` also creates a `Person`
