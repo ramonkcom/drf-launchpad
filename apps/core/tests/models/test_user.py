@@ -62,8 +62,10 @@ class UserModelTests(UserTestsMixin,
         user = User.objects.create_user(
             email='valid.email@test.com',
             password='valid#password@123',
-            given_name='Ramon',
-            family_name='Kayo',
+            person={
+                'given_name': 'Ramon',
+                'family_name': 'Kayo',
+            }
         )
         self.assertEqual(Person.objects.count(), 1)
         self.assertEqual(Person.objects.first(), user.person)

@@ -14,19 +14,25 @@ class PersonModelTests(UserTestsMixin,
         """`Person` string representation is the full name, or user
         """
 
-        user = self.create_user(given_name='Ramon',
-                                family_name='Kayo',
-                                email='rk1@teste.com')
+        user = self.create_user(email='rk1@teste.com',
+                                person={
+                                    'given_name': 'Ramon',
+                                    'family_name': 'Kayo',
+                                })
         self.assertEqual(str(user.person), 'Ramon Kayo')
 
-        user = self.create_user(given_name='Ramon',
-                                family_name=None,
-                                email='rk2@teste.com')
+        user = self.create_user(email='rk2@teste.com',
+                                person={
+                                    'given_name': 'Ramon',
+                                    'family_name': None
+                                })
         self.assertEqual(str(user.person), 'Ramon')
 
-        user = self.create_user(given_name=None,
-                                family_name=None,
-                                email='rk3@teste.com')
+        user = self.create_user(email='rk3@teste.com',
+                                person={
+                                    'given_name': None,
+                                    'family_name': None,
+                                })
         self.assertEqual(str(user.person), f'{user.username} ({user.email})')
 
     def test_delete_person_forbidden(self):

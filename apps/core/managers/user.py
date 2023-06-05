@@ -32,18 +32,18 @@ class UserManager(BaseUserManager):
             kwargs['username'] = email.split(
                 '@')[0] + '_' + str(int(datetime.now().timestamp()))[-5:]
 
-        given_name = kwargs.pop('given_name', 'Superuser')
-        family_name = kwargs.pop('family_name', 'Django')
+        person = kwargs.pop('person', {})
 
         user = self.model(email=self.normalize_email(email), **kwargs)
         user.set_password(password)
         user.save()
 
-        # NOTE `user.person` is guaranteed to exist because of the `post_save`
-        # signal triggered by `User` creation.
-        user.person.given_name = given_name
-        user.person.family_name = family_name
-        user.person.save()
+        if person:
+            for key, value in person.items():
+                # NOTE `user.person` is guaranteed to exist because of the
+                # `post_save` signal triggered by `User` creation.
+                setattr(user.person, key, value)
+                user.person.save()
 
         return user
 
