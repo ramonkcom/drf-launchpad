@@ -18,12 +18,11 @@ class User(AbstractBaseUser,
     Attributes:
         id (uuid): The unique identifier of the user.
         email (str): The email of the user.
-        given_name (str): The given name of the user.
         groups (Manager<Group>): The permission groups of the user.
-        family_name (str): The family name of the user.
         is_active (bool): Whether the user is active or not.
         is_staff (bool): Whether the user is staff or not.
         is_superuser (bool): Whether the user is superuser or not.
+        last_login (datetime): The last login of the user.
         person (Person): The person related to the user.
         user_permissions (Manager<Permission>): The permissions of the user.
         username (str): The username of the user.
@@ -65,6 +64,8 @@ class User(AbstractBaseUser,
     username = models.CharField(
         verbose_name=_("username"),
         max_length=31,
+        null=True,
+        blank=True,
         unique=True,
         help_text=_(
             'Required. 31 characters or fewer. Letters, digits and ./_ only.'
