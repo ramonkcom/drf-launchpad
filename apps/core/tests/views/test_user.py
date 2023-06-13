@@ -4,7 +4,6 @@ from django.urls import reverse
 from rest_framework import status
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.http import urlencode
 
 from ...models import User
 from ..mixins import UserApiTestMixin
