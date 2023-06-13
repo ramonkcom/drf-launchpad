@@ -17,7 +17,7 @@ class EmailApiTests(UserApiTestMixin,
         """
 
         self.user = self.create_user()
-        email = self.user.emails.filter(address=self.user.email).first()
+        email = self.user.primary_email
         self.assertIsNotNone(email)
 
         url = reverse('core:email-confirm', args=[email.pk])
@@ -34,7 +34,7 @@ class EmailApiTests(UserApiTestMixin,
         """
 
         self.user = self.create_user()
-        email = self.user.emails.filter(address=self.user.email).first()
+        email = self.user.primary_email
         self.assertIsNotNone(email)
 
         now = timezone.now()
@@ -56,7 +56,7 @@ class EmailApiTests(UserApiTestMixin,
         """
 
         self.user = self.create_user()
-        email = self.user.emails.filter(address=self.user.email).first()
+        email = self.user.primary_email
         self.assertIsNotNone(email)
 
         email.confirmation_code_date = timezone.now() - timezone.timedelta(

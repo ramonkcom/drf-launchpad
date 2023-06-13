@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.core import validators
 
+from .email import Email
 from ..managers import UserManager
 
 
@@ -92,17 +93,6 @@ class User(AbstractBaseUser,
         return self.person.given_name
 
     @property
-    def is_email_confirmed(self) -> bool:
-        """Returns whether the user email is confirmed or not.
-
-        Returns:
-            bool: Whether the user email is confirmed or not.
-        """
-
-        email = self.emails.filter(address=self.email).first()
-        return email.is_confirmed
-
-    @property
     def family_name(self) -> str:
         """Returns the family name of the person.
 
@@ -121,6 +111,16 @@ class User(AbstractBaseUser,
         """
 
         return self.person.full_name
+
+    @property
+    def primary_email(self) -> Email:
+        """Returns the primary email of the user.
+
+        Returns:
+            Email: The primary email of the user.
+        """
+
+        return self.emails.filter(address=self.email).first()
 
     # ---------------------------------- METHODS --------------------------------- #
 

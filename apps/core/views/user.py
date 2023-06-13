@@ -22,7 +22,7 @@ class UserCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        email = user.emails.first()
+        email = user.primary_email
 
         # TODO: Plug the code to send email confirmation here.
         from django.conf import settings

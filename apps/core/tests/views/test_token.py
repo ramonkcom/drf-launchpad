@@ -38,7 +38,7 @@ class TokenApiTests(UserApiTestMixin,
         password = 'valid#pass!123'
 
         self.user = self.create_user(password=password)
-        email = self.user.emails.filter(address=self.user.email).first()
+        email = self.user.primary_email
         self.assertIsNotNone(email)
         email.confirm()
 
