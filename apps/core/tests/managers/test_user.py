@@ -19,11 +19,11 @@ class UserManagerTests(UserTestsMixin,
         """
 
         self.assertEqual(User.objects.count(), 0)
-        user_1 = self.create_user(email='test@example1.com')
+        user_1 = self.create_user(email='test@example1.com', username=None)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(user_1.username, 'test')
 
-        user_2 = self.create_user(email='test@example2.com')
+        user_2 = self.create_user(email='test@example2.com', username=None)
         auto_username = 'test_' + str(int(datetime.now().timestamp()))[-5:-2]
         self.assertTrue(user_2.username.startswith(auto_username))
 

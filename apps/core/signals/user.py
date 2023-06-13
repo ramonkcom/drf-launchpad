@@ -2,15 +2,18 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 
-from ..models import Person
+from ..models import (
+    Email,
+    Person,
+)
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="create_person_for_user")
-def create_person_for_user(sender, instance, created, **kwargs):
-    """Creates a `Person` for newly created `User`.
+@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
+def user_initial_setup(sender, instance, created, **kwargs):
+    """Initial setup for newly created `User`.
 
-    This function creates a `Person` object everytime an User object is
-    created, and then relates both of them.
+    This function creates a `Person` and an `Email` objects for newly created
+    `User` objects.
 
     Args:
         sender (cls): The model triggering the signal (`User`).
@@ -22,3 +25,5 @@ def create_person_for_user(sender, instance, created, **kwargs):
         return
 
     Person.objects.create(user=instance)
+    Email.objects.create(user=instance,
+                         address=instance.email)
