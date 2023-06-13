@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions
+from django.conf import settings
 
 
 def user_authentication_rule(user):
@@ -20,3 +21,18 @@ def user_authentication_rule(user):
         raise exceptions.AuthenticationFailed({'email': error_msg})
 
     return user is not None and user.is_active
+
+
+def get_anonymous_user(user_model):
+    """Creates an anonymous user. This is necessary for 'django-guardian'.
+
+    See: https://django-guardian.readthedocs.io/en/stable/userguide/custom-user-model.html#custom-user-model-anonymous
+
+    Args:
+        user_model (cls): The `User` model.
+
+    Returns:
+        User: The created anonymous user.
+    """
+
+    return user_model(username=settings.ANONYMOUS_USER_NAME)

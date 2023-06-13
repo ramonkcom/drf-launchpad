@@ -10,5 +10,6 @@ from .django_i18n import *
 
 # THIRD-PARTY SETTINGS
 from .drf_spectacular import *
+from .guardian import *
 from .rest_framework import *
 from .rest_framework_simplejwt import *

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
 
     # THIRD-PARTY
     'drf_spectacular',
+    'guardian',
     'rest_framework',
     'rest_framework_simplejwt',
 
