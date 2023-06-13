@@ -17,7 +17,8 @@ class User(AbstractBaseUser,
 
     Attributes:
         id (uuid): The unique identifier of the user.
-        email (str): The email of the user.
+        email (str): The primary email of the user.
+        emails (Manager<Email>): Emails of the user.
         groups (Manager<Group>): The permission groups of the user.
         is_active (bool): Whether the user is active or not.
         is_staff (bool): Whether the user is staff or not.
@@ -89,6 +90,17 @@ class User(AbstractBaseUser,
         """
 
         return self.person.given_name
+
+    @property
+    def is_email_confirmed(self) -> bool:
+        """Returns whether the user email is confirmed or not.
+
+        Returns:
+            bool: Whether the user email is confirmed or not.
+        """
+
+        email = self.emails.filter(address=self.email).first()
+        return email.is_confirmed
 
     @property
     def family_name(self) -> str:
