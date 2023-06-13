@@ -22,7 +22,7 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny, ]
 
     def get_queryset(self):
-        return Email.objects.filter(confirmation_date=None)
+        return Email.objects.filter(user=self.kwargs['user_pk'])
 
     @extend_schema(
         request=inline_serializer(
