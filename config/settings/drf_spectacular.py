@@ -9,8 +9,8 @@ Full list of drf-spectacular settings:
 """
 
 from .common import (
-    PROJECT_TITLE,
     PROJECT_DESCRIPTION,
+    PROJECT_TITLE,
     PROJECT_VERSION,
 )
 

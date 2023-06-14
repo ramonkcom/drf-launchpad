@@ -1,9 +1,9 @@
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from django.test import TestCase
 
-from ...models import User
 from ..mixins import UserAPITestsMixin
+from ...models import User
 
 
 class UserAPICreateTests(UserAPITestsMixin,

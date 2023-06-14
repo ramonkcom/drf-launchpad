@@ -11,7 +11,6 @@ from rest_framework import (
 )
 from django.utils.translation import gettext_lazy as _
 
-
 from ..models import Email
 from ..serializers import EmailSerializer
 from ..utils.auth import send_email_confirmation

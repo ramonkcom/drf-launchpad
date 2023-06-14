@@ -1,12 +1,12 @@
+from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+from django.http import Http404
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     generics,
     permissions,
     response,
 )
-from drf_spectacular.utils import extend_schema
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-from django.core.exceptions import ValidationError
 
 from ..models import User
 from ..serializers import UserSerializer

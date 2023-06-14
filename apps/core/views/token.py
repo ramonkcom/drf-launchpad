@@ -1,16 +1,15 @@
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
+    inline_serializer,
 )
-from drf_spectacular.utils import inline_serializer
-from drf_spectacular.types import OpenApiTypes
-
+from rest_framework import serializers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView as SimpleJwtTokenObtainPairView,
     TokenRefreshView as SimpleJwtTokenRefreshView,
     TokenVerifyView as SimpleJwtTokenVerifyView,
 )
-from rest_framework import serializers
 
 
 @extend_schema(

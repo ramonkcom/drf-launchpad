@@ -1,12 +1,12 @@
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
+from django.db.models import QuerySet
 from django.db.models.signals import (
     pre_delete,
     pre_save,
 )
-from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 
 from ..models import Person
 

@@ -1,7 +1,7 @@
-from guardian.shortcuts import assign_perm
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings
+from guardian.shortcuts import assign_perm
 
 from ..models import (
     Email,
