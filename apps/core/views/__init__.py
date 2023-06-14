@@ -1,5 +1,7 @@
 from .email import (
     EmailConfirmationAPIView,
+    EmailCreateAPIView,
+    EmailUpdateDestroyAPIView
 )
 from .token import (
     TokenObtainPairView,
@@ -8,4 +10,5 @@ from .token import (
 )
 from .user import (
     UserCreateAPIView,
+    UserRetrieveUpdateAPIView,
 )

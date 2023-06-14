@@ -18,9 +18,11 @@ class UserManagerTests(UserTestsMixin,
         """`UserManager.create_user` creates username when not provided
         """
 
-        self.assertEqual(User.objects.count(), 0)
-        user_1 = self.create_user(email='test@example1.com', username=None)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
         self.assertEqual(User.objects.count(), 1)
+
+        user_1 = self.create_user(email='test@example1.com', username=None)
+        self.assertEqual(User.objects.count(), 2)
         self.assertEqual(user_1.username, 'test')
 
         user_2 = self.create_user(email='test@example2.com', username=None)
@@ -31,7 +33,8 @@ class UserManagerTests(UserTestsMixin,
         """`UserManager.create_user` accepts personal data
         """
 
-        self.assertEqual(User.objects.count(), 0)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
+        self.assertEqual(User.objects.count(), 1)
         user = User.objects.create_user(
             email='valid.email@test.com',
             password='valid#password@123',

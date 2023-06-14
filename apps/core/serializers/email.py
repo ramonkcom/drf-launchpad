@@ -9,5 +9,6 @@ class EmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Email
-        exclude = ['id', 'confirmation_code', 'confirmation_code_date',
+        exclude = ['confirmation_code', 'confirmation_code_date',
                    'origin', 'user',]
+        read_only_fields = ['confirmation_date',]

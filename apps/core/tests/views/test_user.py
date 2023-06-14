@@ -1,9 +1,6 @@
-import uuid
-
 from django.urls import reverse
 from rest_framework import status
 from django.test import TestCase
-from django.utils import timezone
 
 from ...models import User
 from ..mixins import UserApiTestMixin
@@ -16,14 +13,15 @@ class UserApiCreateTests(UserApiTestMixin,
         """It's possible to create a user with valid data
         """
 
-        self.assertEqual(User.objects.count(), 0)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
+        self.assertEqual(User.objects.count(), 1)
 
         url = reverse('core:user-create')
         data = self.create_user_payload()
         res = self.api_client.post(url, data, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(User.objects.count(), 2)
 
         user_created = User.objects.filter(email=data['email']).exists()
         self.assertTrue(user_created)
@@ -32,7 +30,8 @@ class UserApiCreateTests(UserApiTestMixin,
         """It's impossible to create an user with invalid password
         """
 
-        self.assertEqual(User.objects.count(), 0)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
+        self.assertEqual(User.objects.count(), 1)
 
         url = reverse('core:user-create')
         data = self.create_user_payload(
@@ -42,7 +41,7 @@ class UserApiCreateTests(UserApiTestMixin,
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('password_2', res.data)
-        self.assertEqual(User.objects.count(), 0)
+        self.assertEqual(User.objects.count(), 1)
 
         user_created = User.objects.filter(email=data['email']).exists()
         self.assertFalse(user_created)
@@ -51,7 +50,8 @@ class UserApiCreateTests(UserApiTestMixin,
         """It's impossible to create an user with invalid email
         """
 
-        self.assertEqual(User.objects.count(), 0)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
+        self.assertEqual(User.objects.count(), 1)
 
         url = reverse('core:user-create')
         data = self.create_user_payload(email='invalid_email')
@@ -59,7 +59,7 @@ class UserApiCreateTests(UserApiTestMixin,
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', res.data)
-        self.assertEqual(User.objects.count(), 0)
+        self.assertEqual(User.objects.count(), 1)
 
         user_created = User.objects.filter(email=data['email']).exists()
         self.assertFalse(user_created)
@@ -69,7 +69,8 @@ class UserApiCreateTests(UserApiTestMixin,
         """
 
         self.create_user(email='pre_existing_email@test.com')
-        self.assertEqual(User.objects.count(), 1)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
+        self.assertEqual(User.objects.count(), 2)
 
         url = reverse('core:user-create')
         data = self.create_user_payload(
@@ -78,14 +79,15 @@ class UserApiCreateTests(UserApiTestMixin,
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', res.data)
-        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(User.objects.count(), 2)
 
     def test_create_user_existing_username(self):
         """It's impossible to create an user with an existing username
         """
 
         self.create_user(username='pre_existing_username')
-        self.assertEqual(User.objects.count(), 1)
+        # NOTE: 'django-guardian' creates an anonymous user on startup
+        self.assertEqual(User.objects.count(), 2)
 
         url = reverse('core:user-create')
         data = self.create_user_payload(username='pre_existing_username')
@@ -93,65 +95,133 @@ class UserApiCreateTests(UserApiTestMixin,
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('username', res.data)
-        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(User.objects.count(), 2)
 
-    def test_confirm_user_email_invalid_code(self):
-        """It's impossible to confirm user email with invalid code
+
+class UserApiUpdateTests(UserApiTestMixin,
+                         TestCase):
+
+    def test_update_user_valid_data(self):
+        """It's possible to update an user with valid data
         """
 
-        self.user = self.create_user()
-        email = self.user.emails.filter(address=self.user.email).first()
-        self.assertIsNotNone(email)
+        self.user = self.create_user(username='valid_username')
+        self.assertEqual(self.user.username, 'valid_username')
 
-        url = reverse('core:email-confirm', args=[email.pk])
-        data = {'confirmation_code': uuid.uuid4()}
-        res = self.api_client.post(url, data, format='json')
-
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-
-        email.refresh_from_db()
-        self.assertFalse(email.is_confirmed)
-
-    def test_confirm_user_email_within_24h(self):
-        """It's possible to confirm user email within 24 hours
-        """
-
-        self.user = self.create_user()
-        email = self.user.emails.filter(address=self.user.email).first()
-        self.assertIsNotNone(email)
-
-        now = timezone.now()
-        email.confirmation_code_date = now - timezone.timedelta(
-            hours=23)
-        email.save()
-
-        url = reverse('core:email-confirm', args=[email.pk])
-        data = {'confirmation_code': email.confirmation_code}
-        res = self.api_client.post(url, data, format='json')
+        self.authenticate(self.user)
+        url = reverse('core:user-retrieve-update')
+        data = {'username': 'new_valid_username'}
+        res = self.api_client.patch(url, data, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-        email.refresh_from_db()
-        self.assertTrue(email.is_confirmed)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'new_valid_username')
 
-    def test_confirm_user_email_after_24h(self):
-        """It's impossible to confirm user email after 24 hours
+    def test_update_user_person_valid_data(self):
+        """It's possible to update an user personal data with valid data
         """
 
         self.user = self.create_user()
-        email = self.user.emails.filter(address=self.user.email).first()
-        self.assertIsNotNone(email)
+        self.assertEqual(self.user.person.given_name, None)
+        self.assertEqual(self.user.person.family_name, None)
 
-        email.confirmation_code_date = timezone.now() - timezone.timedelta(
-            hours=25)
-        email.save()
+        self.authenticate(self.user)
+        url = reverse('core:user-retrieve-update')
+        data = {'given_name': 'Ramon', 'family_name': 'Kayo'}
+        res = self.api_client.patch(url, data, format='json')
 
-        url = reverse('core:email-confirm', args=[email.pk])
-        data = {'code': email.confirmation_code}
-        res = self.api_client.post(url, data, format='json')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.person.given_name, 'Ramon')
+        self.assertEqual(self.user.person.family_name, 'Kayo')
+
+    def test_update_user_password_directly(self):
+        """It's impossible to update user password directly
+        """
+
+        self.user = self.create_user(password='OLD#valid_pass!123')
+        self.authenticate(self.user)
+
+        url = reverse('core:user-retrieve-update')
+        data = {'password': 'NEW#valid_pass!123'}
+        res = self.api_client.patch(url, data, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('OLD#valid_pass!123'))
+
+    def test_update_user_invalid_password(self):
+        """It's impossible to update user password with invalid data
+        """
+
+        self.user = self.create_user(password='OLD#valid_pass!123')
+        self.authenticate(self.user)
+
+        url = reverse('core:user-retrieve-update')
+        data = {
+            'password_1': 'NEW#valid_pass!123',
+            'password_2': 'NEW#invalid_pass!123'
+        }
+        res = self.api_client.patch(url, data, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('confirmation_code', res.data)
 
-        email.refresh_from_db()
-        self.assertFalse(email.is_confirmed)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('OLD#valid_pass!123'))
+
+    def test_update_user_missing_password(self):
+        """It's impossible to update user password without confirmation
+        """
+
+        self.user = self.create_user(password='OLD#valid_pass!123')
+        self.authenticate(self.user)
+
+        url = reverse('core:user-retrieve-update')
+        data = {'password_1': 'NEW#valid_pass!123'}
+        res = self.api_client.patch(url, data, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('OLD#valid_pass!123'))
+
+    def test_update_user_valid_password(self):
+        """It's possible to update user password with valid data
+        """
+
+        self.user = self.create_user(password='OLD#valid_pass!123')
+        self.authenticate(self.user)
+
+        url = reverse('core:user-retrieve-update')
+        data = {
+            'password_1': 'NEW#valid_pass!123',
+            'password_2': 'NEW#valid_pass!123'
+        }
+        res = self.api_client.patch(url, data, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('NEW#valid_pass!123'))
+
+    def test_update_user_email_directly(self):
+        """It's impossible to update user email directly
+        """
+
+        initial_email = 'valid_email@test.com'
+        new_email = 'new_valid_email@test.com'
+
+        self.user = self.create_user(email=initial_email)
+        self.authenticate(self.user)
+
+        url = reverse('core:user-retrieve-update')
+        data = {'email': new_email}
+        res = self.api_client.patch(url, data, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, initial_email)
