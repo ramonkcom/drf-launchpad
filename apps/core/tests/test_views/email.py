@@ -1,15 +1,15 @@
 import uuid
 
-from django.urls import reverse
-from rest_framework import status
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
+from rest_framework import status
 
 from ...models import Email
-from ..mixins import UserApiTestMixin
+from ..mixins import UserAPITestsMixin
 
 
-class EmailApiTests(UserApiTestMixin,
+class EmailAPITests(UserAPITestsMixin,
                     TestCase):
 
     def test_confirm_user_email_invalid_code(self):

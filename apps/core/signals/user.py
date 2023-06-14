@@ -1,20 +1,20 @@
-from guardian.shortcuts import assign_perm
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings
+from guardian.shortcuts import assign_perm
 
 from ..models import (
     Email,
     Person,
 )
-from ..utils.auth import assign_basic_permissions
+from ..utils.permissions import assign_basic_permissions
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
 def user_initial_setup(sender, instance, created, **kwargs):
     """Initial setup for newly created `User`.
 
-    This function creates a `Person` and an `Email` objects for newly created
+    This function creates a `Person` and an `Email` object for newly created
     `User` objects, and assigns the necessary permissions to it, so it can
     change its own data.
 

@@ -15,7 +15,7 @@ class UserManagerTests(UserTestsMixin,
     """
 
     def test_manager_create_user_creates_username(self):
-        """`UserManager.create_user` creates username when not provided
+        """Usernames are generated when not provided
         """
 
         # NOTE: 'django-guardian' creates an anonymous user on startup
@@ -30,7 +30,7 @@ class UserManagerTests(UserTestsMixin,
         self.assertTrue(user_2.username.startswith(auto_username))
 
     def test_manager_create_user_accepts_person_data(self):
-        """`UserManager.create_user` accepts personal data
+        """`UserManager` handles personal data
         """
 
         # NOTE: 'django-guardian' creates an anonymous user on startup

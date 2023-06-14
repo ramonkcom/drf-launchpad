@@ -1,16 +1,15 @@
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
-)
-from drf_spectacular.utils import inline_serializer
-from drf_spectacular.types import OpenApiTypes
-
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView as SimpleJwtTokenObtainPairView,
-    TokenRefreshView as SimpleJwtTokenRefreshView,
-    TokenVerifyView as SimpleJwtTokenVerifyView,
+    inline_serializer,
 )
 from rest_framework import serializers
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 
 @extend_schema(
@@ -29,8 +28,8 @@ from rest_framework import serializers
         },
     ),
 )
-class TokenObtainPairView(SimpleJwtTokenObtainPairView):
-    """Obtain JWT access and refresh pair from username and password.
+class AuthenticationAPIView(TokenObtainPairView):
+    """Obtain a access and refresh token pair from username and password.
     """
 
 
@@ -50,8 +49,8 @@ class TokenObtainPairView(SimpleJwtTokenObtainPairView):
         },
     ),
 )
-class TokenRefreshView(SimpleJwtTokenRefreshView):
-    """Refresh JWT pair from refresh token.
+class AuthenticationRenewalAPIView(TokenRefreshView):
+    """Obtain a new access and refresh token pair from a refresh token.
     """
 
 
@@ -65,6 +64,6 @@ class TokenRefreshView(SimpleJwtTokenRefreshView):
         },
     ),
 )
-class TokenVerifyView(SimpleJwtTokenVerifyView):
-    """Verify whether a JWT token (access or refresh) is valid or not.
+class AuthenticationVerificationAPIView(TokenVerifyView):
+    """Verify whether an access or refresh token is valid or not.
     """

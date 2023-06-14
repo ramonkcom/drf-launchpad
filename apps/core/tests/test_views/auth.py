@@ -2,11 +2,11 @@ from django.urls import reverse
 from django.test import TestCase
 from rest_framework import status
 
-from ..mixins import UserApiTestMixin
+from ..mixins import UserAPITestsMixin
 
 
-class TokenApiTests(UserApiTestMixin,
-                    TestCase):
+class AuthenticationAPITests(UserAPITestsMixin,
+                             TestCase):
 
     def test_obtain_token_email_not_confirmed(self):
         """It's impossible to obtain a token for an user before confirming email
@@ -19,7 +19,7 @@ class TokenApiTests(UserApiTestMixin,
             password=password,
         )
 
-        url = reverse('core:token-obtain')
+        url = reverse('core:auth')
         data = {
             'email': self.user.email,
             'password': password,
@@ -42,7 +42,7 @@ class TokenApiTests(UserApiTestMixin,
         self.assertIsNotNone(email)
         email.confirm()
 
-        url = reverse('core:token-obtain')
+        url = reverse('core:auth')
         data = {
             'email': self.user.email,
             'password': password,

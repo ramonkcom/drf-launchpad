@@ -4,7 +4,7 @@ from ..models import Email
 
 
 class EmailSerializer(serializers.ModelSerializer):
-    """Serializer for `Email` model.
+    """Base serializer for `Email`.
     """
 
     class Meta:

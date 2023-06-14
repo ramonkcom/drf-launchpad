@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
+from rest_framework.test import APIClient
 
 
 class UserTestsMixin:
@@ -35,7 +35,7 @@ class UserTestsMixin:
         return get_user_model().objects.create_user(**user_kwargs)
 
 
-class UserApiTestMixin(UserTestsMixin):
+class UserAPITestsMixin(UserTestsMixin):
 
     api_client = None
 
@@ -43,7 +43,7 @@ class UserApiTestMixin(UserTestsMixin):
         self.api_client = self.create_api_client()
 
     def create_api_client(self, auth_user=None, **kwargs):
-        """Gets the API client.
+        """Creates and returns an API client.
 
         Args:
             auth_user (User, optional): The user to authenticate.

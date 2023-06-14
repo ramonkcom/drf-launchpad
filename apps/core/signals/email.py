@@ -1,13 +1,13 @@
-from guardian.shortcuts import assign_perm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from guardian.shortcuts import assign_perm
 
 from ..models import Email
 
 
 @receiver(post_save, sender=Email, dispatch_uid="assign_email_permissions")
 def assign_email_permissions(sender, instance, created, **kwargs):
-    """Adds the necessary permissions to the `User` related to `Email`.
+    """Adds the basic permissions to handle `Email` objects.
 
     Adds the necessary permissions to the `User` so it can view, change and
     delete its own `Email` objects.

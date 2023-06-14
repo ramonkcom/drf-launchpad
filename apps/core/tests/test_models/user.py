@@ -1,12 +1,7 @@
-from datetime import datetime
-
 from django.test import TestCase
 
-from ...models import (
-    Person,
-    User,
-)
 from ..mixins import UserTestsMixin
+from ...models import Person
 
 
 class UserModelTests(UserTestsMixin,
