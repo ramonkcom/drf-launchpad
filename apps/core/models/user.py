@@ -18,6 +18,7 @@ class User(AbstractBaseUser,
 
     Attributes:
         id (uuid): The unique identifier of the user.
+        date_joined (datetime): The date the user joined the system.
         email (str): The primary email of the user.
         emails (Manager<Email>): Emails of the user.
         groups (Manager<Group>): The permission groups of the user.
@@ -45,6 +46,11 @@ class User(AbstractBaseUser,
         primary_key=True,
         default=uuid4,
         editable=False,
+    )
+
+    date_joined = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("date joined"),
     )
 
     email = models.EmailField(

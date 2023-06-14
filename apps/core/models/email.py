@@ -29,6 +29,7 @@ class Email(models.Model):
         """
 
         DEFAULT_SIGNUP = 'DEFAULT_SIGNUP', _('Default Sign Up')
+        ADMIN = 'ADMIN', _('Admin')
         USER_INPUT = 'USER_INPUT', _('User Input')
 
     CONFIRMATION_CODE_TIMEOUT = 60 * 60 * 24
@@ -44,7 +45,7 @@ class Email(models.Model):
     address = models.EmailField(
         max_length=255,
         unique=True,
-        verbose_name=_('email'),
+        verbose_name=_('address'),
     )
 
     confirmation_code = models.UUIDField(

@@ -21,6 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'user_permissions',
         ]
+        read_only_fields = [
+            'date_joined',
+        ]
 
     def get_fields(self):
         fields = super().get_fields()
