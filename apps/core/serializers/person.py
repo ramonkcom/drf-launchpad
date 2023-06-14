@@ -4,7 +4,7 @@ from ..models import Person
 
 
 class PersonSerializer(serializers.ModelSerializer):
-    """Serializer for `Person` model.
+    """Base serializer for `Person`.
     """
 
     class Meta:

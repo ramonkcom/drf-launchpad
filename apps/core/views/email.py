@@ -63,7 +63,7 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
 
 @extend_schema(tags=['User', ])
 class EmailCreateAPIView(generics.CreateAPIView):
-    """Adds a new `Email` to the authenticated `User`.
+    """Adds a new `Email` to the authenticated user.
     """
 
     def get_queryset(self):
@@ -101,7 +101,7 @@ class EmailUpdateDestroyAPIView(generics.GenericAPIView):
         ),
     )
     def patch(self, request, *args, **kwargs):
-        """Updates the `Email` instance.
+        """Updates an `Email` of the authenticated user.
         """
 
         email = self.get_object()
@@ -133,7 +133,7 @@ class EmailUpdateDestroyAPIView(generics.GenericAPIView):
         return response.Response(data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        """Deletes the `Email` instance.
+        """Deletes an `Email` from the authenticated user.
         """
 
         email = self.get_object()

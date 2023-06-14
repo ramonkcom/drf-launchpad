@@ -84,30 +84,30 @@ class User(AbstractBaseUser,
 
     @property
     def given_name(self) -> str:
-        """Returns the given name of the person.
+        """Returns the given name of the user.
 
         Returns:
-            str: The given name of the person.
+            str: The given name of the user.
         """
 
         return self.person.given_name
 
     @property
     def family_name(self) -> str:
-        """Returns the family name of the person.
+        """Returns the family name of the user.
 
         Returns:
-            str: The family name of the person.
+            str: The family name of the user.
         """
 
         return self.person.family_name
 
     @property
     def full_name(self) -> str:
-        """Returns the full name of the person.
+        """Returns the full name of the user.
 
         Returns:
-            str: The full name of the person.
+            str: The full name of the user.
         """
 
         return self.person.full_name

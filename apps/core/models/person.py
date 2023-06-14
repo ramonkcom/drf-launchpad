@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Person(models.Model):
-    """Represents an user in the system.
+    """Represents the personal data of an `User` in the system.
 
     Attributes:
         id (uuid): The unique identifier of the user.

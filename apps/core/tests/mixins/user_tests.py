@@ -43,7 +43,7 @@ class UserAPITestsMixin(UserTestsMixin):
         self.api_client = self.create_api_client()
 
     def create_api_client(self, auth_user=None, **kwargs):
-        """Gets the API client.
+        """Creates and returns an API client.
 
         Args:
             auth_user (User, optional): The user to authenticate.

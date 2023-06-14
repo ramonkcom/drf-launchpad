@@ -4,10 +4,10 @@ from rest_framework import exceptions
 
 
 def assign_basic_permissions(user):
-    """Assigns the necessary permissions to an `User`.
+    """Assigns the basic permissions to an `User`.
 
-    This function assigns the necessary permissions to a user, so it can
-    change its own data.
+    This function assigns the basic permissions to an user (usually a newly
+    created one), so it can handle its own data.
 
     Args:
         user (User): The user to be assigned the permissions.

@@ -14,7 +14,7 @@ from ..utils.auth import assign_basic_permissions
 def user_initial_setup(sender, instance, created, **kwargs):
     """Initial setup for newly created `User`.
 
-    This function creates a `Person` and an `Email` objects for newly created
+    This function creates a `Person` and an `Email` object for newly created
     `User` objects, and assigns the necessary permissions to it, so it can
     change its own data.
 
