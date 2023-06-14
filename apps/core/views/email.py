@@ -13,7 +13,6 @@ from django.utils.translation import gettext_lazy as _
 
 from ..models import Email
 from ..serializers import EmailSerializer
-from ..utils.email import send_email_confirmation
 
 
 @extend_schema(tags=['User', ])
@@ -77,7 +76,8 @@ class EmailCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         email = serializer.save(user=self.request.user)
-        send_email_confirmation(email)
+        verification_email = email.get_verification_email()
+        verification_email.send()
 
 
 @extend_schema(tags=['User', ])

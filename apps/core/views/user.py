@@ -10,7 +10,6 @@ from rest_framework import (
 
 from ..models import User
 from ..serializers import UserSerializer
-from ..utils.email import send_email_confirmation
 
 
 @extend_schema(tags=['User', ])
@@ -26,7 +25,8 @@ class UserCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        send_email_confirmation(user.primary_email)
+        verification_email = user.primary_email.get_verification_email()
+        verification_email.send()
 
 
 @extend_schema(tags=['User', ])
