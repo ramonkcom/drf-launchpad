@@ -5,8 +5,8 @@ from rest_framework import status
 from ..mixins import UserAPITestsMixin
 
 
-class TokenAPITests(UserAPITestsMixin,
-                    TestCase):
+class AuthenticationAPITests(UserAPITestsMixin,
+                             TestCase):
 
     def test_obtain_token_email_not_confirmed(self):
         """It's impossible to obtain a token for an user before confirming email
@@ -19,7 +19,7 @@ class TokenAPITests(UserAPITestsMixin,
             password=password,
         )
 
-        url = reverse('core:token-obtain')
+        url = reverse('core:auth')
         data = {
             'email': self.user.email,
             'password': password,
@@ -42,7 +42,7 @@ class TokenAPITests(UserAPITestsMixin,
         self.assertIsNotNone(email)
         email.confirm()
 
-        url = reverse('core:token-obtain')
+        url = reverse('core:auth')
         data = {
             'email': self.user.email,
             'password': password,

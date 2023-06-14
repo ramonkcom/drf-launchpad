@@ -1,5 +1,5 @@
+from .auth import AuthenticationAPITests
 from .email import EmailAPITests
-from .token import TokenAPITests
 from .user import (
     UserAPICreateTests,
     UserAPIUpdateTests,

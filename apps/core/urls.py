@@ -1,12 +1,12 @@
 from django.urls import path
 
 from .views import (
+    AuthenticationAPIView,
+    AuthenticationRenewalAPIView,
+    AuthenticationVerificationAPIView,
     EmailConfirmationAPIView,
     EmailCreateAPIView,
     EmailUpdateDestroyAPIView,
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
     UserCreateAPIView,
     UserRetrieveUpdateAPIView,
 )
@@ -14,17 +14,17 @@ from .views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('token/obtain/',
-         TokenObtainPairView.as_view(),
-         name='token-obtain'),
+    path('auth/',
+         AuthenticationAPIView.as_view(),
+         name='auth'),
 
-    path('token/refresh/',
-         TokenRefreshView.as_view(),
-         name='token-refresh'),
+    path('auth/renewal/',
+         AuthenticationRenewalAPIView.as_view(),
+         name='auth-renewal'),
 
-    path('token/verify/',
-         TokenVerifyView.as_view(),
-         name='token-verify'),
+    path('auth/verification/',
+         AuthenticationVerificationAPIView.as_view(),
+         name='auth-verification'),
 
     path('user/',
          UserCreateAPIView.as_view(),

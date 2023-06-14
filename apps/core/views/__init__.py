@@ -1,12 +1,12 @@
+from .auth import (
+    AuthenticationAPIView,
+    AuthenticationRenewalAPIView,
+    AuthenticationVerificationAPIView,
+)
 from .email import (
     EmailConfirmationAPIView,
     EmailCreateAPIView,
     EmailUpdateDestroyAPIView
-)
-from .token import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
 )
 from .user import (
     UserCreateAPIView,
