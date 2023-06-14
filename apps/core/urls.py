@@ -8,6 +8,7 @@ from .views import (
     TokenRefreshView,
     TokenVerifyView,
     UserCreateAPIView,
+    UserRetrieveUpdateAPIView,
 )
 
 app_name = 'core'
@@ -40,4 +41,8 @@ urlpatterns = [
     path('user/email/<str:pk>/',
          EmailUpdateDestroyAPIView.as_view(),
          name='email-update-destroy'),
+
+    path('user/me/',
+         UserRetrieveUpdateAPIView.as_view(),
+         name='user-retrieve-update'),
 ]

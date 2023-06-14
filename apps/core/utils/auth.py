@@ -21,8 +21,8 @@ def assign_basic_permissions(user):
     assign_perm('core.view_user', user)
     assign_perm('core.change_user', user)
 
-    assign_perm('core.add_email', user)
     assign_perm('core.view_email', user)
+    assign_perm('core.add_email', user)
     assign_perm('core.change_email', user)
     assign_perm('core.delete_email', user)
 

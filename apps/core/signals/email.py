@@ -24,6 +24,6 @@ def assign_email_permissions(sender, instance, created, **kwargs):
     email = instance
     user = email.user
 
+    assign_perm("view_email", user, email)
     assign_perm("change_email", user, email)
     assign_perm("delete_email", user, email)
-    assign_perm("view_email", user, email)

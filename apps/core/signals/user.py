@@ -36,4 +36,5 @@ def user_initial_setup(sender, instance, created, **kwargs):
                              address=user.email)
 
         assign_basic_permissions(user)
+        assign_perm("view_user", user, user)
         assign_perm("change_user", user, user)
