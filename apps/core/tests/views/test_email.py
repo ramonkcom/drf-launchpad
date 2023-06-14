@@ -20,7 +20,7 @@ class EmailApiTests(UserApiTestMixin,
         email = self.user.primary_email
         self.assertIsNotNone(email)
 
-        url = reverse('core:email-confirmation', args=[self.user.pk, email.pk])
+        url = reverse('core:email-confirmation', args=[email.pk])
         data = {'confirmation_code': uuid.uuid4()}
         res = self.api_client.post(url, data, format='json')
 
@@ -43,7 +43,7 @@ class EmailApiTests(UserApiTestMixin,
             hours=23)
         email.save()
 
-        url = reverse('core:email-confirmation', args=[self.user.pk, email.pk])
+        url = reverse('core:email-confirmation', args=[email.pk])
         data = {'confirmation_code': email.confirmation_code}
         res = self.api_client.post(url, data, format='json')
 
@@ -64,7 +64,7 @@ class EmailApiTests(UserApiTestMixin,
             hours=25)
         email.save()
 
-        url = reverse('core:email-confirmation', args=[self.user.pk, email.pk])
+        url = reverse('core:email-confirmation', args=[email.pk])
         data = {'confirmation_code': email.confirmation_code}
         res = self.api_client.post(url, data, format='json')
 

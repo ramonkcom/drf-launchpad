@@ -11,10 +11,6 @@ from .views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('<str:user_pk>/email/<str:pk>/confirmation/',
-         EmailConfirmationAPIView.as_view(),
-         name='email-confirmation'),
-
     path('token/obtain/',
          TokenObtainPairView.as_view(),
          name='token-obtain'),
@@ -30,4 +26,8 @@ urlpatterns = [
     path('user/',
          UserCreateAPIView.as_view(),
          name='user-create'),
+
+    path('user/email/<str:pk>/confirmation/',
+         EmailConfirmationAPIView.as_view(),
+         name='email-confirmation'),
 ]
