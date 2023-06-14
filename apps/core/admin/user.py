@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.utils.translation import gettext_lazy as _
 
+from .email import EmailInline
 from ..models import User
 from .person import PersonInline
 
@@ -15,7 +16,7 @@ class UserAdmin(auth_admin.UserAdmin):
             'all': ('css/custom.css', 'core/css/admin.css',)
         }
 
-    inlines = [PersonInline,]
+    inlines = [PersonInline, EmailInline,]
 
     readonly_fields = ['date_joined',]
 
@@ -62,6 +63,22 @@ class UserAdmin(auth_admin.UserAdmin):
             )
 
         return fieldsets
+
+    def save_related(self, request, form, formsets, change):
+        from ..models import Email
+
+        for formset in formsets:
+            for inline_form in formset.forms:
+                if not isinstance(inline_form.instance, Email):
+                    continue
+
+                if Email.objects.filter(id=inline_form.instance.pk).exists():
+                    continue
+
+                new_email = inline_form.instance
+                new_email.origin = Email.Origin.ADMIN
+
+        super().save_related(request, form, formsets, change)
 
 
 admin.site.register(User, UserAdmin)
