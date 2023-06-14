@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import (
     EmailConfirmationAPIView,
+    EmailCreateAPIView,
+    EmailUpdateDestroyAPIView,
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
@@ -30,4 +32,12 @@ urlpatterns = [
     path('user/email/<str:pk>/confirmation/',
          EmailConfirmationAPIView.as_view(),
          name='email-confirmation'),
+
+    path('user/email/',
+         EmailCreateAPIView.as_view(),
+         name='email-create'),
+
+    path('user/email/<str:pk>/',
+         EmailUpdateDestroyAPIView.as_view(),
+         name='email-update-destroy'),
 ]
