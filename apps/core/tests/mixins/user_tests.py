@@ -35,7 +35,7 @@ class UserTestsMixin:
         return get_user_model().objects.create_user(**user_kwargs)
 
 
-class UserApiTestMixin(UserTestsMixin):
+class UserAPITestsMixin(UserTestsMixin):
 
     api_client = None
 

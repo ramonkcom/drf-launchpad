@@ -3,10 +3,10 @@ from rest_framework import status
 from django.test import TestCase
 
 from ...models import User
-from ..mixins import UserApiTestMixin
+from ..mixins import UserAPITestsMixin
 
 
-class UserApiCreateTests(UserApiTestMixin,
+class UserAPICreateTests(UserAPITestsMixin,
                          TestCase):
 
     def test_create_user_valid_data(self):
@@ -98,7 +98,7 @@ class UserApiCreateTests(UserApiTestMixin,
         self.assertEqual(User.objects.count(), 2)
 
 
-class UserApiUpdateTests(UserApiTestMixin,
+class UserAPIUpdateTests(UserAPITestsMixin,
                          TestCase):
 
     def test_update_user_valid_data(self):

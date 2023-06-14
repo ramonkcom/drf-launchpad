@@ -6,10 +6,10 @@ from django.test import TestCase
 from django.utils import timezone
 
 from ...models import Email
-from ..mixins import UserApiTestMixin
+from ..mixins import UserAPITestsMixin
 
 
-class EmailApiTests(UserApiTestMixin,
+class EmailAPITests(UserAPITestsMixin,
                     TestCase):
 
     def test_confirm_user_email_invalid_code(self):

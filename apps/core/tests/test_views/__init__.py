@@ -1,6 +1,6 @@
-from .email import EmailApiTests
-from .token import TokenApiTests
+from .email import EmailAPITests
+from .token import TokenAPITests
 from .user import (
-    UserApiCreateTests,
-    UserApiUpdateTests,
+    UserAPICreateTests,
+    UserAPIUpdateTests,
 )
