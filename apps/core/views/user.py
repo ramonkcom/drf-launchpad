@@ -10,7 +10,7 @@ from rest_framework import (
 
 from ..models import User
 from ..serializers import UserSerializer
-from ..utils.auth import send_email_confirmation
+from ..utils.email import send_email_confirmation
 
 
 @extend_schema(tags=['User', ])

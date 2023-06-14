@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..models import Email
 from ..serializers import EmailSerializer
-from ..utils.auth import send_email_confirmation
+from ..utils.email import send_email_confirmation
 
 
 @extend_schema(tags=['User', ])

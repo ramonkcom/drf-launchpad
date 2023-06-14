@@ -7,7 +7,7 @@ from ..models import (
     Email,
     Person,
 )
-from ..utils.auth import assign_basic_permissions
+from ..utils.permissions import assign_basic_permissions
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
