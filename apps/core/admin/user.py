@@ -17,14 +17,16 @@ class UserAdmin(auth_admin.UserAdmin):
 
     inlines = [PersonInline,]
 
-    list_display = ['id', 'email', 'username', 'full_name',
+    readonly_fields = ['date_joined',]
+
+    list_display = ['id', 'email', 'username', 'full_name', 'date_joined',
                     'is_active', 'is_staff', 'is_superuser',]
 
     list_display_links = ['id', 'email', 'username',]
 
     list_filter = ['is_active', 'is_staff', 'is_superuser',]
 
-    search_fields = ['username', 'email',
+    search_fields = ['username', 'email', 'emails__address',
                      'person__given_name', 'person__family_name',]
 
     def get_fieldsets(self, request, obj=None):
@@ -34,6 +36,7 @@ class UserAdmin(auth_admin.UserAdmin):
         fieldsets = (
             (_('Credentials'), {
                 'fields': (
+                    'date_joined',
                     ('email', 'username',),
                     'password',
                 ),
