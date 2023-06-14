@@ -59,6 +59,8 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
 
 @extend_schema(tags=['User', ])
 class EmailCreateAPIView(generics.CreateAPIView):
+    """Adds a new `Email` to the authenticated `User`.
+    """
 
     def get_queryset(self):
         return Email.objects.all()
