@@ -7,6 +7,7 @@ from ..models import (
     Email,
     Person,
 )
+from ..utils.auth import assign_basic_permissions
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
@@ -26,9 +27,13 @@ def user_initial_setup(sender, instance, created, **kwargs):
     if not created:
         return
 
-    if instance.username != settings.ANONYMOUS_USER_NAME:
-        Person.objects.create(user=instance)
-        Email.objects.create(user=instance,
-                             address=instance.email)
-        assign_perm("core.change_user", instance)
-        assign_perm("change_user", instance, instance)
+    user = instance
+
+    if user.username != settings.ANONYMOUS_USER_NAME:
+        Person.objects.create(user=user)
+
+        Email.objects.create(user=user,
+                             address=user.email)
+
+        assign_basic_permissions(user)
+        assign_perm("change_user", user, user)
