@@ -26,13 +26,16 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
     def get_queryset(self):
         return Email.objects.all()
 
+    def get_serializer_class(self):
+        return EmailSerializer
+
     @extend_schema(
         request=inline_serializer(
-            name='ConfirmationCodeSerializer',
+            name='ConfirmationCodeInlineSerializer',
             fields={
                 'confirmation_code': serializers.CharField(required=True),
             },
-        )
+        ),
     )
     def post(self, request, *args, **kwargs):
         """Confirms an `Email` checking it against its confirmation code.
@@ -54,7 +57,9 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
                                      status.HTTP_400_BAD_REQUEST)
 
         email.confirm()
-        return response.Response(status=status.HTTP_200_OK)
+        data = self.get_serializer(email).data
+
+        return response.Response(data, status=status.HTTP_200_OK)
 
 
 @extend_schema(tags=['User', ])
@@ -63,7 +68,10 @@ class EmailCreateAPIView(generics.CreateAPIView):
     """
 
     def get_queryset(self):
-        return Email.objects.all()
+        if not self.request.user:
+            return Email.objects.none()
+
+        return Email.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
         return EmailSerializer
@@ -77,25 +85,39 @@ class EmailCreateAPIView(generics.CreateAPIView):
 class EmailUpdateDestroyAPIView(generics.GenericAPIView):
 
     def get_queryset(self):
+        if not self.request.user:
+            return Email.objects.none()
+
         return Email.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        return EmailSerializer
 
     @extend_schema(
         request=inline_serializer(
-            name='EmailSerializer',
+            name='EmailUpdateInlineSerializer',
             fields={
-                'is_primary': serializers.BooleanField(),
+                'is_primary': serializers.BooleanField(required=True),
             },
-        )
+        ),
     )
     def patch(self, request, *args, **kwargs):
         """Updates the `Email` instance.
         """
 
         email = self.get_object()
-        is_primary = self.request.data.pop('is_primary', False)
+        is_primary = self.request.data.pop('is_primary', None)
+
+        if is_primary is None:
+            error_msg = _('is_primary is required.')
+            return response.Response({'is_primary': error_msg},
+                                     status.HTTP_400_BAD_REQUEST)
 
         if not is_primary:
-            return response.Response(status=status.HTTP_200_OK)
+            error_msg = _('You cannot directly make an email not primary. '
+                          'Set another email as primary instead.')
+            return response.Response({'non_field_errors': error_msg},
+                                     status.HTTP_400_BAD_REQUEST)
 
         if not email.is_confirmed:
             error_msg = _(
@@ -107,7 +129,9 @@ class EmailUpdateDestroyAPIView(generics.GenericAPIView):
         user.email = email.address
         user.save()
 
-        return response.Response(status=status.HTTP_200_OK)
+        data = self.get_serializer(email).data
+
+        return response.Response(data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         """Deletes the `Email` instance.
