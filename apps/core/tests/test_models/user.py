@@ -86,4 +86,4 @@ class UserModelTests(UserTestsMixin,
         self.assertEqual(user.family_name, 'Kayo')
 
         with self.assertRaises(AttributeError):
-            test = user.inexistent_field  # pylint disable=unused-variable
+            _test = user.inexistent_field
