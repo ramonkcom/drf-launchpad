@@ -25,13 +25,6 @@ class UserTestsMixin:
         }
         user_kwargs.update(kwargs)
 
-        email_username = user_kwargs['email'].split('@', maxsplit=1)[0]
-        kwargs['username'] = email_username
-
-        while get_user_model().objects.filter(username=kwargs['username']).exists():
-            timestamp_slice = str(int(datetime.now().timestamp()))[-5:]
-            kwargs['username'] = f'{email_username}_{timestamp_slice}'
-
         return get_user_model().objects.create_user(**user_kwargs)
 
 

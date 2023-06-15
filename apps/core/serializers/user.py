@@ -57,6 +57,11 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        person = validated_data.pop('person', {})
+
+        for field_name, value in person.items():
+            validated_data[field_name] = value
+
         return User.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):

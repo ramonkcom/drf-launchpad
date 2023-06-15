@@ -24,17 +24,17 @@ def user_initial_setup(sender, instance, created, **kwargs):
         created (bool): Whether the user was created or not (updated).
     """
 
-    if not created:
-        return
-
     user = instance
 
-    if user.username != settings.ANONYMOUS_USER_NAME:
-        Person.objects.create(user=user)
+    if user.is_anonymous:
+        return
 
+    if created:
         Email.objects.create(user=user,
                              address=user.email)
 
         assign_basic_permissions(user)
         assign_perm("view_user", user, user)
         assign_perm("change_user", user, user)
+
+    user.person.save()

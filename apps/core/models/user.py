@@ -1,3 +1,4 @@
+from typing import Any
 from uuid import uuid4
 
 from django.contrib.auth.models import (
@@ -8,7 +9,7 @@ from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .email import Email
+from .person import Person
 from ..managers import UserManager
 
 
@@ -89,26 +90,6 @@ class User(AbstractBaseUser,
     # -------------------------------- PROPERTIES -------------------------------- #
 
     @property
-    def given_name(self) -> str:
-        """Returns the given name of the user.
-
-        Returns:
-            str: The given name of the user.
-        """
-
-        return self.person.given_name
-
-    @property
-    def family_name(self) -> str:
-        """Returns the family name of the user.
-
-        Returns:
-            str: The family name of the user.
-        """
-
-        return self.person.family_name
-
-    @property
     def full_name(self) -> str:
         """Returns the full name of the user.
 
@@ -119,7 +100,19 @@ class User(AbstractBaseUser,
         return self.person.full_name
 
     @property
-    def primary_email(self) -> Email:
+    def is_anonymous(self):
+        """Returns whether the user is anonymous or not.
+
+        Returns:
+            bool: Whether the user is anonymous or not.
+        """
+
+        from django.conf import settings
+
+        return self.username == settings.ANONYMOUS_USER_NAME
+
+    @property
+    def primary_email(self):
         """Returns the primary email of the user.
 
         Returns:
@@ -129,6 +122,62 @@ class User(AbstractBaseUser,
         return self.emails.filter(address=self.email).first()
 
     # ---------------------------------- METHODS --------------------------------- #
+
+    @classmethod
+    def _extract_person_kwargs(cls, kwargs):
+        """Extracts the person kwargs from the kwargs.
+
+        Args:
+            kwargs (dict): The kwargs to extract the person kwargs from.
+
+        Returns:
+            tuple[dict, dict]: The kwargs without the person kwargs, and the
+                person kwargs.
+        """
+
+        person_kwargs = {}
+        for field in Person._meta.fields:
+            if field.name not in kwargs or field.primary_key or field.related_model:
+                continue
+
+            person_kwargs[field.name] = kwargs.pop(field.name)
+
+        return kwargs, person_kwargs
+
+    def __init__(self, *args, **kwargs):
+        kwargs, person_kwargs = self._extract_person_kwargs(kwargs)
+
+        super().__init__(*args, **kwargs)
+
+        try:
+            getattr(self, 'person')
+
+        except Person.DoesNotExist:
+            person_kwargs['user_id'] = self.id
+            self.person = Person(**person_kwargs)
+
+    def __getattr__(self, attr_name):
+        person = super().__getattribute__('person')
+
+        if not person:
+            return super().__getattribute__(attr_name)
+
+        person_fields = [f.name for f in Person._meta.fields
+                         if not f.primary_key and not f.related_model]
+
+        if attr_name in person_fields:
+            return getattr(person, attr_name)
+
+        return super().__getattribute__(attr_name)
+
+    def __setattr__(self, attr_name, value):
+        person_fields = [f.name for f in Person._meta.fields
+                         if not f.primary_key and not f.related_model]
+
+        if attr_name in person_fields:
+            setattr(self.person, attr_name, value)
+
+        super().__setattr__(attr_name, value)
 
     def __str__(self) -> str:
         """Returns the string representation of the user.
