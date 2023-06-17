@@ -1,10 +1,14 @@
+from datetime import datetime
 from uuid import uuid4
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
-from django.core import validators
+from django.core import (
+    exceptions,
+    validators,
+)
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -199,3 +203,16 @@ class User(AbstractBaseUser,
         """
 
         return f'{self.username} ({self.email})' if self.username else f'{self.email}'
+
+    def clean(self):
+        super().clean()
+
+        if not self.email:
+            error_msg = _('Email address is required.')
+            raise exceptions.ValidationError({'email': error_msg})
+
+        self.email = self._meta.model.objects.normalize_email(self.email)
+
+        if (self.is_superuser or self.is_staff) and not self.password:
+            error_msg = _('Password is required.')
+            raise exceptions.ValidationError({'password': error_msg})

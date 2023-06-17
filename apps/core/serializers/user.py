@@ -41,33 +41,28 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):  # pylint: disable=arguments-renamed
         data.pop('password', None)
-
         password_1 = data.pop('password_1', None)
         password_2 = data.pop('password_2', None)
-
-        if not password_1 and not password_2:
-            return data
 
         if password_1 != password_2:
             error_msg = _('Passwords must match.')
             raise serializers.ValidationError(
                 {'password_2': error_msg})
 
-        data['password'] = password_1
+        if password_1:
+            data['password'] = password_1
+
+        person = data.pop('person', {})
+        for field_name, value in person.items():
+            data[field_name] = value
+
         return data
 
     def create(self, validated_data):
-        person = validated_data.pop('person', {})
-
-        for field_name, value in person.items():
-            validated_data[field_name] = value
-
         return User.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
         validated_data.pop('email', None)
-
-        person = validated_data.pop('person', {})
         password = validated_data.pop('password', None)
 
         user = super().update(instance, validated_data)
@@ -75,11 +70,5 @@ class UserSerializer(serializers.ModelSerializer):
         if password:
             user.set_password(password)
             user.save()
-
-        if person:
-            serializer = PersonSerializer(
-                user.person, data=person, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
 
         return user
