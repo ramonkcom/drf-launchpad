@@ -49,18 +49,11 @@ class UserModelTests(UserTestsMixin,
         user = User(given_name='Ramon',
                     family_name='Kayo')
 
-        self.assertIsNotNone(user.person)
-        self.assertEqual(user.person.given_name, 'Ramon')
-        self.assertEqual(user.person.family_name, 'Kayo')
-
         self.assertEqual(user.given_name, 'Ramon')
         self.assertEqual(user.family_name, 'Kayo')
 
         user.given_name = 'Ramon Test'
         user.family_name = 'Kayo Test'
-
-        self.assertEqual(user.person.given_name, 'Ramon Test')
-        self.assertEqual(user.person.family_name, 'Kayo Test')
 
         self.assertEqual(user.given_name, 'Ramon Test')
         self.assertEqual(user.family_name, 'Kayo Test')
@@ -79,11 +72,11 @@ class UserModelTests(UserTestsMixin,
         self.assertEqual(Person.objects.count(), 1)
         self.assertEqual(Person.objects.first(), user.person)
 
-        self.assertEqual(user.person.given_name, 'Ramon')
-        self.assertEqual(user.person.family_name, 'Kayo')
-
         self.assertEqual(user.given_name, 'Ramon')
         self.assertEqual(user.family_name, 'Kayo')
+
+        self.assertEqual(user.person.given_name, 'Ramon')
+        self.assertEqual(user.person.family_name, 'Kayo')
 
         with self.assertRaises(AttributeError):
             _test = user.inexistent_field

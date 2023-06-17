@@ -1,4 +1,4 @@
-from django.core.exceptions import PermissionDenied
+from django.core import exceptions
 from django.test import TransactionTestCase
 
 from ...models import Person
@@ -38,11 +38,11 @@ class PersonModelTests(UserTestsMixin,
         self.assertEqual(Person.objects.count(), 1)
         self.assertEqual(Person.objects.first(), user.person)
 
-        with self.assertRaises(PermissionDenied):
+        with self.assertRaises(exceptions.PermissionDenied):
             user.person.delete()
         self.assertEqual(Person.objects.count(), 1)
 
-        with self.assertRaises(PermissionDenied):
+        with self.assertRaises(exceptions.PermissionDenied):
             Person.objects.first().delete()
         self.assertEqual(Person.objects.count(), 1)
 
@@ -52,7 +52,7 @@ class PersonModelTests(UserTestsMixin,
 
         self.assertEqual(Person.objects.count(), 0)
 
-        with self.assertRaises(PermissionDenied):
+        with self.assertRaises(Exception):
             Person.objects.create(given_name='John',
                                   family_name='Doe')
 

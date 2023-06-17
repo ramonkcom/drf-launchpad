@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models.signals import post_save
+from django.db.models import signals
 from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 
@@ -10,7 +10,7 @@ from ..models import (
 from ..utils.permissions import assign_basic_permissions
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
+@receiver(signals.post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
 def user_initial_setup(sender, instance, created, **kwargs):
     """Initial setup for newly created `User`.
 
@@ -25,7 +25,6 @@ def user_initial_setup(sender, instance, created, **kwargs):
     """
 
     user = instance
-
     if user.is_anonymous:
         return
 
@@ -33,8 +32,14 @@ def user_initial_setup(sender, instance, created, **kwargs):
         Email.objects.create(user=user,
                              address=user.email)
 
+        if not getattr(sender, '_skip_person_creation', False):
+            person_kwargs = getattr(user, '_person_attrs', {})
+            person_kwargs['user'] = user
+            Person.objects.create(**person_kwargs)
+
         assign_basic_permissions(user)
         assign_perm("view_user", user, user)
         assign_perm("change_user", user, user)
 
-    user.person.save()
+    else:
+        user.person.save()
