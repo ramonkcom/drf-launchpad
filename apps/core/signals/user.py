@@ -28,12 +28,13 @@ def user_initial_setup(sender, instance, created, **kwargs):
     if user.is_anonymous:
         return
 
+    person_kwargs = getattr(user, '_person_attrs', {})
+
     if created:
         Email.objects.create(user=user,
                              address=user.email)
 
         if not getattr(sender, '_skip_person_creation', False):
-            person_kwargs = getattr(user, '_person_attrs', {})
             person_kwargs['user'] = user
             Person.objects.create(**person_kwargs)
 
@@ -42,4 +43,8 @@ def user_initial_setup(sender, instance, created, **kwargs):
         assign_perm("change_user", user, user)
 
     else:
+        if person_kwargs:
+            for field_name, value in person_kwargs.items():
+                setattr(user.person, field_name, value)
+
         user.person.save()

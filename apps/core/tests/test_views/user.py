@@ -122,7 +122,8 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         """It's possible to update an user personal data with valid data
         """
 
-        self.user = self.create_user()
+        self.user = self.create_user(given_name=None,
+                                     family_name=None)
         self.assertEqual(self.user.person.given_name, None)
         self.assertEqual(self.user.person.family_name, None)
 
