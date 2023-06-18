@@ -35,6 +35,7 @@ class UserAPICreateTests(UserAPITestsMixin,
 
         url = reverse('core:user-create')
         data = self.create_user_payload(
+            password_1='valid_pass!123',
             password_2='different#pass!456',
         )
         res = self.api_client.post(url, data, format='json')
@@ -152,6 +153,7 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         self.user.refresh_from_db()
+        self.assertFalse(self.user.check_password('NEW#valid_pass!123'))
         self.assertTrue(self.user.check_password('OLD#valid_pass!123'))
 
     def test_update_user_invalid_password(self):
@@ -171,6 +173,8 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.user.refresh_from_db()
+        self.assertFalse(self.user.check_password('NEW#valid_pass!123'))
+        self.assertFalse(self.user.check_password('NEW#invalid_pass!123'))
         self.assertTrue(self.user.check_password('OLD#valid_pass!123'))
 
     def test_update_user_missing_password(self):
@@ -187,6 +191,7 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.user.refresh_from_db()
+        self.assertFalse(self.user.check_password('NEW#valid_pass!123'))
         self.assertTrue(self.user.check_password('OLD#valid_pass!123'))
 
     def test_update_user_valid_password(self):

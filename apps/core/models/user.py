@@ -92,6 +92,18 @@ class User(AbstractBaseUser,
 
     # -------------------------------- PROPERTIES -------------------------------- #
 
+    @classmethod
+    @property
+    def factory(cls):
+        """Returns the factory for the `User` model.
+
+        Returns:
+            UserFactory: The factory for the `User` model.
+        """
+
+        from ..factories import UserFactory
+        return UserFactory
+
     @property
     def full_name(self) -> str:
         """Returns the full name of the user.

@@ -80,6 +80,18 @@ class Email(models.Model):
 
     # -------------------------------- PROPERTIES -------------------------------- #
 
+    @classmethod
+    @property
+    def factory(self):
+        """Returns the factory for the `Email` model.
+
+        Returns:
+            EmailFactory: The factory for the `Email` model.
+        """
+
+        from ..factories import EmailFactory
+        return EmailFactory
+
     @property
     def is_confirmed(self):
         """Whether the email is confirmed or not.

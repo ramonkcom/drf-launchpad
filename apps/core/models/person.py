@@ -53,6 +53,18 @@ class Person(models.Model):
 
     # -------------------------------- PROPERTIES -------------------------------- #
 
+    @classmethod
+    @property
+    def factory(self):
+        """Returns the factory for the `Person` model.
+
+        Returns:
+            PersonFactory: The factory for the `Person` model.
+        """
+
+        from ..factories import PersonFactory
+        return PersonFactory
+
     @property
     def full_name(self) -> str:
         """Returns the full name of the person.
