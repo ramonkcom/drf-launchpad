@@ -19,7 +19,7 @@ class UserTestsMixin:
         return User.objects.create_user(**user_dict)
 
     def build_user(self, **kwargs):
-        """Builds a new user.
+        """Builds a new user, without saving it to the DB.
 
         Returns:
             User: The new user.

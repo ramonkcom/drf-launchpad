@@ -8,8 +8,6 @@ from .person import PersonInline
 
 
 class UserAdmin(auth_admin.UserAdmin):
-    """Defines the admin interface for the `User` model.
-    """
 
     class Media:
         css = {
@@ -31,8 +29,6 @@ class UserAdmin(auth_admin.UserAdmin):
                      'person__given_name', 'person__family_name',]
 
     def get_fieldsets(self, request, obj=None):
-        """Returns the fieldsets for the `User` change pages.
-        """
 
         fieldsets = (
             (_('Credentials'), {

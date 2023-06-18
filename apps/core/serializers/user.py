@@ -7,8 +7,6 @@ from .person import PersonSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Base serializer for `User`.
-    """
 
     class Meta:
         model = User

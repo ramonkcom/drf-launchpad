@@ -3,17 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
-    """Manager for the `User` model.
-    """
 
     def create_user(self, email, **kwargs):
         """Creates, saves and returns a new user.
 
         Args:
             email (str): The user's email address.
-
-        Raises:
-            ValueError: If the email is not provided.
 
         Returns:
             User: The created user.

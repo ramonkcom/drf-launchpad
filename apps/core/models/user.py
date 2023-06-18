@@ -205,15 +205,6 @@ class User(AbstractBaseUser,
             super().__setattr__(attr_name, value)
 
     def __str__(self) -> str:
-        """Returns the string representation of the user.
-
-        Returns the `username`, if set, followed by the `email`. Else returns
-        just the `email`.
-
-        Returns:
-            str: The string representation of the user.
-        """
-
         return f'{self.username} ({self.email})' if self.username else f'{self.email}'
 
     def clean(self):

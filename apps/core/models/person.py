@@ -83,15 +83,6 @@ class Person(models.Model):
     # ---------------------------------- METHODS --------------------------------- #
 
     def __str__(self) -> str:
-        """Returns the string representation of the person.
-
-        Returns the given name followed by the family name of the person. If any
-        of them is not set, returns the email.
-
-        Returns:
-            str: The string representation of the person.
-        """
-
         representation = self.full_name
 
         if not representation:

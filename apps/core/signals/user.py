@@ -14,6 +14,17 @@ from ..utils.permissions import assign_basic_permissions
 
 @receiver(signals.pre_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="generate_username")
 def generate_username(sender, instance, **kwargs):
+    """Generates a username for the `User` being saved.
+
+    This function generates a username for the `User` being saved, if it
+    doesn't have one already. The username is generated from the user's email
+    address, and if it already exists, a numeric sequence based on the
+    timestamp is appended to it (e.g. `john_12345`).
+
+    Args:
+        sender (cls): The model triggering the signal (`User`).
+        instance (User): The user being saved.
+    """
 
     user = instance
     if user.username:
