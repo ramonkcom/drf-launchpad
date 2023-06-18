@@ -41,6 +41,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ROOT_URLCONF = 'config.urls'
 
 # ---------------------------------------------------------------------------- #
+# NOTE this is a custom setting to determine if we are in production or not
+
+PRODUCTION = False
+
+# ---------------------------------------------------------------------------- #
 # NOTE this is a custom setting to determine if we are running tests or not
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
