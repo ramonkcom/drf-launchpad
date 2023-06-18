@@ -249,15 +249,22 @@ class VerificationEmail:
         """Sends the verification email.
         """
 
+        import warnings
+
         if settings.TESTING:
             return
 
         if settings.DEBUG:
             return self.print()
 
-        # Plug the code to send email confirmation here.
-        error_msg = _('You must provide a `send` implementation.')
-        raise NotImplementedError(error_msg)
+        if settings.PRODUCTION:
+            # Plug the code to send email confirmation here.
+            error_msg = _('You must provide a `send` implementation.')
+            raise NotImplementedError(error_msg)
+
+        else:
+            warn_msg = str(_('Notice: `send` not implemented.'))
+            warnings.warn(warn_msg)
 
     def print(self):
         """Prints the verification email to the console.
