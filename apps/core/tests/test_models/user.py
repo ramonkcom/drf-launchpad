@@ -63,10 +63,10 @@ class UserModelTests(UserTestsMixin,
         self.assertEqual(Person.objects.count(), 0)
 
         user = None
-        user = User.objects.create(email='ramon@test.com',
-                                   password='test#password@123',
-                                   given_name='Ramon',
-                                   family_name='Kayo')
+        user = self.create_user(email='ramon@test.com',
+                                password='test#password@123',
+                                given_name='Ramon',
+                                family_name='Kayo')
 
         self.assertEqual(User.objects.count(), 2)
         self.assertEqual(Person.objects.count(), 1)
@@ -78,5 +78,7 @@ class UserModelTests(UserTestsMixin,
         self.assertEqual(user.person.given_name, 'Ramon')
         self.assertEqual(user.person.family_name, 'Kayo')
 
+        # NOTE this test exists because `__getattr__` is being overriden in
+        # the `User` model to handle `Person` fields as it was its own
         with self.assertRaises(AttributeError):
             _test = user.inexistent_field

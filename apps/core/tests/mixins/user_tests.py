@@ -1,7 +1,7 @@
-from datetime import datetime
-
-from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
+
+from ...models import User
+from ...factories import UserFactory
 
 
 class UserTestsMixin:
@@ -11,21 +11,28 @@ class UserTestsMixin:
     def create_user(self, **kwargs):
         """Creates a new user.
 
-        If not provided, the following kwargs will be used:
-            - email: 'valid.email@test.com'
-            - password: 'valid#password@123'
+        Returns:
+            User: The new user.
+        """
+
+        user_dict = UserFactory.build_dict(**kwargs)
+        return User.objects.create_user(**user_dict)
+
+    def build_user(self, **kwargs):
+        """Builds a new user.
 
         Returns:
             User: The new user.
         """
 
-        user_kwargs = {
-            'email': 'valid.email@test.com',
-            'password': 'valid#password@123',
-        }
-        user_kwargs.update(kwargs)
+        password = kwargs.pop('password', '')
 
-        return get_user_model().objects.create_user(**user_kwargs)
+        user = UserFactory.build(**kwargs)
+
+        if password != '':
+            user.set_password(password)
+
+        return user
 
 
 class UserAPITestsMixin(UserTestsMixin):
@@ -70,40 +77,26 @@ class UserAPITestsMixin(UserTestsMixin):
     def create_user_payload(self, **kwargs):
         """Creates valid user payload data.
 
-        If no kwargs are provided, the following kwargs will be used:
-            - given_name: 'Valid'
-            - family_name: 'User'
-            - email: 'valid.email@test.com'
-            - password_1: 'valid#pass!123'
-            - password_2: 'valid#pass!123'
-
-        If only `update=True` is provided, the following kwargs will be used:
-            - given_name: 'Valid Updated'
-            - family_name: 'User Updated'
-            - password_1: 'NEW_valid#pass!123'
-            - password_2: 'NEW_valid#pass!123'
-
         Returns:
             dict: The user payload data.
         """
 
-        update = kwargs.pop('update', False)
+        exclude_fields = kwargs.pop('exclude_fields', [])
+        include_fields = kwargs.pop('include_fields', [])
 
-        data = {
-            'given_name': 'Valid',
-            'family_name': 'User',
-            'email': 'valid.email@test.com',
-            'password_1': 'valid#pass!123',
-            'password_2': 'valid#pass!123',
-        }
+        exclude_fields.extend([f for f in [
+            'is_active',
+            'is_staff',
+            'is_superuser',
+        ] if f not in include_fields])
 
-        if update:
-            data = {
-                'given_name': 'Valid Updated',
-                'family_name': 'User Updated',
-                'password_1': 'NEW_valid#pass!123',
-                'password_2': 'NEW_valid#pass!123',
-            }
+        user_dict = UserFactory.build_dict(include_fields=include_fields,
+                                           exclude_fields=exclude_fields,
+                                           **kwargs)
+        password = user_dict.pop('password', '')
 
-        data.update(kwargs)
-        return data
+        if password != '' and 'password_1' not in user_dict and 'password_2' not in user_dict:
+            user_dict['password_1'] = password
+            user_dict['password_2'] = password
+
+        return user_dict
