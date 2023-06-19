@@ -1,7 +1,6 @@
 import uuid
 
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 
@@ -12,6 +11,16 @@ from ..mixins import UserAPITestsMixin
 class EmailAPITests(UserAPITestsMixin,
                     TestCase):
 
+    def setUp(self):
+        super().setUp()
+        self.confirm_view = 'core:email-confirmation'
+        self.create_view = 'core:email-create'
+        self.destroy_view = 'core:email-update-destroy'
+        self.partial_update_view = 'core:email-update-destroy'
+
+    def api_confirm(self, **kwargs):
+        return self.api_post(self.confirm_view, **kwargs)
+
     def test_confirm_user_email_invalid_code(self):
         """It's impossible to confirm user email with invalid code
         """
@@ -20,9 +29,8 @@ class EmailAPITests(UserAPITestsMixin,
         email = self.user.primary_email
         self.assertIsNotNone(email)
 
-        url = reverse('core:email-confirmation', args=[email.pk])
         data = {'confirmation_code': uuid.uuid4()}
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_confirm(url_args=[email.pk], data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('confirmation_code', res.data)
@@ -43,9 +51,8 @@ class EmailAPITests(UserAPITestsMixin,
             hours=23)
         email.save()
 
-        url = reverse('core:email-confirmation', args=[email.pk])
         data = {'confirmation_code': email.confirmation_code}
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_confirm(url_args=[email.pk], data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -64,9 +71,8 @@ class EmailAPITests(UserAPITestsMixin,
             hours=25)
         email.save()
 
-        url = reverse('core:email-confirmation', args=[email.pk])
         data = {'confirmation_code': email.confirmation_code}
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_confirm(url_args=[email.pk], data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('confirmation_code', res.data)
@@ -82,9 +88,8 @@ class EmailAPITests(UserAPITestsMixin,
         self.authenticate(self.user)
         self.assertEqual(self.user.emails.count(), 1)
 
-        url = reverse('core:email-create')
         data = {'address': 'new.valid.email@test.com'}
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(self.user.emails.count(), 2)
@@ -105,9 +110,8 @@ class EmailAPITests(UserAPITestsMixin,
         self.authenticate(self.user)
         self.assertEqual(self.user.emails.count(), 1)
 
-        url = reverse('core:email-create')
         data = {'address': existing_email}
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('address', res.data)
@@ -128,8 +132,7 @@ class EmailAPITests(UserAPITestsMixin,
         )
         self.assertEqual(self.user.emails.count(), 2)
 
-        url = reverse('core:email-update-destroy', args=[new_email.pk])
-        res = self.api_client.delete(url, format='json')
+        res = self.api_destroy(url_args=[new_email.pk])
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(self.user.emails.count(), 1)
@@ -148,9 +151,7 @@ class EmailAPITests(UserAPITestsMixin,
         )
         self.assertEqual(self.user.emails.count(), 2)
 
-        primary_email = self.user.primary_email
-        url = reverse('core:email-update-destroy', args=[primary_email.pk])
-        res = self.api_client.delete(url, format='json')
+        res = self.api_destroy(url_args=[self.user.primary_email.pk])
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('non_field_errors', res.data)
@@ -170,9 +171,9 @@ class EmailAPITests(UserAPITestsMixin,
         additional_email.confirm()
         self.assertFalse(additional_email.is_primary)
 
-        url = reverse('core:email-update-destroy', args=[additional_email.pk])
         data = {'is_primary': True}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(
+            url_args=[additional_email.pk], data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -197,9 +198,9 @@ class EmailAPITests(UserAPITestsMixin,
         self.assertFalse(additional_email.is_confirmed)
         self.assertFalse(additional_email.is_primary)
 
-        url = reverse('core:email-update-destroy', args=[additional_email.pk])
         data = {'is_primary': True}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(
+            url_args=[additional_email.pk], data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('non_field_errors', res.data)

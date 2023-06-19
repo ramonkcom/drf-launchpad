@@ -1,4 +1,3 @@
-from django.urls import reverse
 from django.test import TestCase
 from rest_framework import status
 
@@ -7,6 +6,13 @@ from ..mixins import UserAPITestsMixin
 
 class AuthenticationAPITests(UserAPITestsMixin,
                              TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.obtain_token_view = 'core:auth'
+
+    def api_authenticate(self, **kwargs):
+        return self.api_post(self.obtain_token_view, **kwargs)
 
     def test_obtain_token_email_not_confirmed(self):
         """It's impossible to obtain a token for an user before confirming email
@@ -19,12 +25,11 @@ class AuthenticationAPITests(UserAPITestsMixin,
             password=password,
         )
 
-        url = reverse('core:auth')
         data = {
             'email': self.user.email,
             'password': password,
         }
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_authenticate(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertNotIn('refresh', res.data)
@@ -42,12 +47,11 @@ class AuthenticationAPITests(UserAPITestsMixin,
         self.assertIsNotNone(email)
         email.confirm()
 
-        url = reverse('core:auth')
         data = {
             'email': self.user.email,
             'password': password,
         }
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_authenticate(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('refresh', res.data)
