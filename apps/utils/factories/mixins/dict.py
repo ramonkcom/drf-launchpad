@@ -1,5 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 
+from ...helpers import model_to_dict
+
 
 class DictFactoryMixin:
 
@@ -21,7 +23,6 @@ class DictFactoryMixin:
 
     @classmethod
     def _build_dict(cls, _model_instance, **kwargs):
-        from apps.utils import model_to_dict
 
         instance_dict = model_to_dict(_model_instance)
         instance_dict.update(kwargs)
