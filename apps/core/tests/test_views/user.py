@@ -111,7 +111,7 @@ class UserAPIUpdateTests(APITestsMixin,
         self.user = self.create_user(username='valid_username')
         self.assertEqual(self.user.username, 'valid_username')
 
-        self.authenticate(self.user)
+        self.authenticate()
         data = {'username': 'new_valid_username'}
         res = self.api_partial_update(data=data)
 
@@ -129,7 +129,7 @@ class UserAPIUpdateTests(APITestsMixin,
         self.assertEqual(self.user.person.given_name, None)
         self.assertEqual(self.user.person.family_name, None)
 
-        self.authenticate(self.user)
+        self.authenticate()
         data = {'given_name': 'Ramon', 'family_name': 'Kayo'}
         res = self.api_partial_update(data=data)
 
@@ -144,7 +144,7 @@ class UserAPIUpdateTests(APITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
         data = {'password': 'NEW#valid_pass!123'}
         res = self.api_partial_update(data=data)
@@ -160,7 +160,7 @@ class UserAPIUpdateTests(APITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
         data = {
             'password_1': 'NEW#valid_pass!123',
@@ -180,7 +180,7 @@ class UserAPIUpdateTests(APITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
         data = {'password_1': 'NEW#valid_pass!123'}
         res = self.api_partial_update(data=data)
@@ -196,7 +196,7 @@ class UserAPIUpdateTests(APITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
         data = {
             'password_1': 'NEW#valid_pass!123',
@@ -217,7 +217,7 @@ class UserAPIUpdateTests(APITestsMixin,
         new_email = 'new_valid_email@test.com'
 
         self.user = self.create_user(email=initial_email)
-        self.authenticate(self.user)
+        self.authenticate()
 
         data = {'email': new_email}
         res = self.api_partial_update(data=data)

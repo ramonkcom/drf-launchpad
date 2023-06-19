@@ -78,17 +78,28 @@ class APITestsMixin(UserTestsMixin):
     def setUp(self):  # pylint: disable=invalid-name
         self.api_client = self.create_api_client()
 
-    def authenticate(self, user, api_client=None, **kwargs):
+    def authenticate(self, user=None, api_client=None):
         """Authenticates an user by force.
 
         Args:
-            user (User): The user to be authenticated.
+            user (User, optional): The user to be authenticated. Defaults to
+                `self.user`.
             api_client (APIClient, optional): The API client to be used.
+                Defaults to `self.api_client`.
 
         Returns:
             User: The authenticated user.
         """
 
+        if not user and not hasattr(self, 'user'):
+            error_msg = _('The `user` is required to authenticate.')
+            raise ValueError(error_msg)
+
+        if not api_client and not self.api_client:
+            error_msg = _('The `api_client` is required to authenticate.')
+            raise ValueError(error_msg)
+
+        user = self.user if not user else user
         api_client = self.api_client if not api_client else api_client
         api_client.force_authenticate(user=user)
         return user
@@ -403,7 +414,7 @@ class APITestsMixin(UserTestsMixin):
 
         return self.api_put(self.update_view, **kwargs)
 
-    def create_api_client(self, auth_user=None, **kwargs):
+    def create_api_client(self, auth_user=None):
         """Creates and returns an API client.
 
         Args:

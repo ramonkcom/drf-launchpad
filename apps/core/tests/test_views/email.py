@@ -85,7 +85,7 @@ class EmailAPITests(APITestsMixin,
         """
 
         self.user = self.create_user()
-        self.authenticate(self.user)
+        self.authenticate()
         self.assertEqual(self.user.emails.count(), 1)
 
         data = {'address': 'new.valid.email@test.com'}
@@ -107,7 +107,7 @@ class EmailAPITests(APITestsMixin,
         self.create_user(email=existing_email)
 
         self.user = self.create_user()
-        self.authenticate(self.user)
+        self.authenticate()
         self.assertEqual(self.user.emails.count(), 1)
 
         data = {'address': existing_email}
@@ -125,7 +125,7 @@ class EmailAPITests(APITestsMixin,
         """
 
         self.user = self.create_user(email='valid.email@test.com')
-        self.authenticate(self.user)
+        self.authenticate()
         new_email = Email.objects.create(
             address='another.valid.email@test.com',
             user=self.user,
@@ -144,7 +144,7 @@ class EmailAPITests(APITestsMixin,
         """
 
         self.user = self.create_user(email='valid.email@test.com')
-        self.authenticate(self.user)
+        self.authenticate()
         Email.objects.create(
             address='another.valid.email@test.com',
             user=self.user,
@@ -162,7 +162,7 @@ class EmailAPITests(APITestsMixin,
         """
 
         self.user = self.create_user(email='valid.email@test.com')
-        self.authenticate(self.user)
+        self.authenticate()
         additional_email = Email.objects.create(
             address='another.valid.email@test.com',
             user=self.user,
@@ -189,7 +189,7 @@ class EmailAPITests(APITestsMixin,
 
         initial_email = 'valid.email@test.com'
         self.user = self.create_user(email=initial_email)
-        self.authenticate(self.user)
+        self.authenticate()
         additional_email = Email.objects.create(
             address='another.valid.email@test.com',
             user=self.user,
