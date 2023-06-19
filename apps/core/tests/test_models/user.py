@@ -1,14 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from ..mixins import UserTestsMixin
+from ..mixins import UserTestMixin
 from ...models import Person
 
 
 User = get_user_model()
 
 
-class UserModelTests(UserTestsMixin,
+class UserModelTests(UserTestMixin,
                      TestCase):
     """Test cases for the `User` model.
     """

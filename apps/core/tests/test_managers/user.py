@@ -6,10 +6,10 @@ from ...models import (
     Person,
     User,
 )
-from ..mixins import UserTestsMixin
+from ..mixins import UserTestMixin
 
 
-class UserManagerTests(UserTestsMixin,
+class UserManagerTests(UserTestMixin,
                        TestCase):
     """Test cases for the `UserManager` manager.
     """

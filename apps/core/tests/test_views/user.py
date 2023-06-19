@@ -1,13 +1,19 @@
 from django.test import TestCase
-from django.urls import reverse
 from rest_framework import status
 
-from ..mixins import UserAPITestsMixin
+from apps.mixins import APITestMixin
+
+from ..mixins import UserTestMixin
 from ...models import User
 
 
-class UserAPICreateTests(UserAPITestsMixin,
+class UserAPICreateTests(UserTestMixin,
+                         APITestMixin,
                          TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.create_view = 'core:user-create'
 
     def test_create_user_valid_data(self):
         """It's possible to create a user with valid data
@@ -16,9 +22,8 @@ class UserAPICreateTests(UserAPITestsMixin,
         # NOTE: 'django-guardian' creates an anonymous user on startup
         self.assertEqual(User.objects.count(), 1)
 
-        url = reverse('core:user-create')
         data = self.create_user_payload()
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 2)
@@ -33,12 +38,11 @@ class UserAPICreateTests(UserAPITestsMixin,
         # NOTE: 'django-guardian' creates an anonymous user on startup
         self.assertEqual(User.objects.count(), 1)
 
-        url = reverse('core:user-create')
         data = self.create_user_payload(
             password_1='valid_pass!123',
             password_2='different#pass!456',
         )
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('password_2', res.data)
@@ -54,9 +58,8 @@ class UserAPICreateTests(UserAPITestsMixin,
         # NOTE: 'django-guardian' creates an anonymous user on startup
         self.assertEqual(User.objects.count(), 1)
 
-        url = reverse('core:user-create')
         data = self.create_user_payload(email='invalid_email')
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', res.data)
@@ -73,10 +76,9 @@ class UserAPICreateTests(UserAPITestsMixin,
         # NOTE: 'django-guardian' creates an anonymous user on startup
         self.assertEqual(User.objects.count(), 2)
 
-        url = reverse('core:user-create')
         data = self.create_user_payload(
             email='pre_existing_email@test.com')
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', res.data)
@@ -90,17 +92,21 @@ class UserAPICreateTests(UserAPITestsMixin,
         # NOTE: 'django-guardian' creates an anonymous user on startup
         self.assertEqual(User.objects.count(), 2)
 
-        url = reverse('core:user-create')
         data = self.create_user_payload(username='pre_existing_username')
-        res = self.api_client.post(url, data, format='json')
+        res = self.api_create(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('username', res.data)
         self.assertEqual(User.objects.count(), 2)
 
 
-class UserAPIUpdateTests(UserAPITestsMixin,
+class UserAPIUpdateTests(UserTestMixin,
+                         APITestMixin,
                          TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.partial_update_view = 'core:user-retrieve-update'
 
     def test_update_user_valid_data(self):
         """It's possible to update an user with valid data
@@ -109,10 +115,9 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         self.user = self.create_user(username='valid_username')
         self.assertEqual(self.user.username, 'valid_username')
 
-        self.authenticate(self.user)
-        url = reverse('core:user-retrieve-update')
+        self.authenticate()
         data = {'username': 'new_valid_username'}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -128,10 +133,9 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         self.assertEqual(self.user.person.given_name, None)
         self.assertEqual(self.user.person.family_name, None)
 
-        self.authenticate(self.user)
-        url = reverse('core:user-retrieve-update')
+        self.authenticate()
         data = {'given_name': 'Ramon', 'family_name': 'Kayo'}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -144,11 +148,10 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
-        url = reverse('core:user-retrieve-update')
         data = {'password': 'NEW#valid_pass!123'}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -161,14 +164,13 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
-        url = reverse('core:user-retrieve-update')
         data = {
             'password_1': 'NEW#valid_pass!123',
             'password_2': 'NEW#invalid_pass!123'
         }
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -182,11 +184,10 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
-        url = reverse('core:user-retrieve-update')
         data = {'password_1': 'NEW#valid_pass!123'}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -199,14 +200,13 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         """
 
         self.user = self.create_user(password='OLD#valid_pass!123')
-        self.authenticate(self.user)
+        self.authenticate()
 
-        url = reverse('core:user-retrieve-update')
         data = {
             'password_1': 'NEW#valid_pass!123',
             'password_2': 'NEW#valid_pass!123'
         }
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -221,11 +221,10 @@ class UserAPIUpdateTests(UserAPITestsMixin,
         new_email = 'new_valid_email@test.com'
 
         self.user = self.create_user(email=initial_email)
-        self.authenticate(self.user)
+        self.authenticate()
 
-        url = reverse('core:user-retrieve-update')
         data = {'email': new_email}
-        res = self.api_client.patch(url, data, format='json')
+        res = self.api_partial_update(data=data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
