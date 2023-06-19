@@ -1,4 +1,1 @@
-from .user_tests import (
-    APITestsMixin,
-    UserTestsMixin,
-)
+from .user_tests import UserTestsMixin

@@ -1,10 +1,13 @@
 from django.test import TestCase
 from rest_framework import status
 
-from ..mixins import APITestsMixin
+from apps.mixins import APITestsMixin
+
+from ..mixins import UserTestsMixin
 
 
-class AuthenticationAPITests(APITestsMixin,
+class AuthenticationAPITests(UserTestsMixin,
+                             APITestsMixin,
                              TestCase):
 
     def setUp(self):
