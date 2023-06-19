@@ -65,7 +65,7 @@ class UserTestsMixin:
         return user_dict
 
 
-class UserAPITestsMixin(UserTestsMixin):
+class APITestsMixin(UserTestsMixin):
 
     api_client = None
     create_view = ''

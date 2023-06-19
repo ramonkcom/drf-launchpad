@@ -1,11 +1,11 @@
 from django.test import TestCase
 from rest_framework import status
 
-from ..mixins import UserAPITestsMixin
+from ..mixins import APITestsMixin
 from ...models import User
 
 
-class UserAPICreateTests(UserAPITestsMixin,
+class UserAPICreateTests(APITestsMixin,
                          TestCase):
 
     def setUp(self):
@@ -97,7 +97,7 @@ class UserAPICreateTests(UserAPITestsMixin,
         self.assertEqual(User.objects.count(), 2)
 
 
-class UserAPIUpdateTests(UserAPITestsMixin,
+class UserAPIUpdateTests(APITestsMixin,
                          TestCase):
 
     def setUp(self):

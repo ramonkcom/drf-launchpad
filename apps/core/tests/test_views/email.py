@@ -5,10 +5,10 @@ from django.utils import timezone
 from rest_framework import status
 
 from ...models import Email
-from ..mixins import UserAPITestsMixin
+from ..mixins import APITestsMixin
 
 
-class EmailAPITests(UserAPITestsMixin,
+class EmailAPITests(APITestsMixin,
                     TestCase):
 
     def setUp(self):
