@@ -4,14 +4,14 @@ from django.test import TestCase
 from django.utils import timezone
 from rest_framework import status
 
-from apps.mixins import APITestsMixin
+from apps.mixins import APITestMixin
 
-from ..mixins import UserTestsMixin
+from ..mixins import UserTestMixin
 from ...models import Email
 
 
-class EmailAPITests(UserTestsMixin,
-                    APITestsMixin,
+class EmailAPITests(UserTestMixin,
+                    APITestMixin,
                     TestCase):
 
     def setUp(self):

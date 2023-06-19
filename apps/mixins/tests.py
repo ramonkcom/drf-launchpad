@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.test import APIClient
 
 
-class APITestsMixin:
+class APITestMixin:
 
     api_client = None
     create_view = ''

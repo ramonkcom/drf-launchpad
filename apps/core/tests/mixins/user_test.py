@@ -4,7 +4,7 @@ from ...models import User
 from ...factories import UserFactory
 
 
-class UserTestsMixin:
+class UserTestMixin:
 
     user = None
 

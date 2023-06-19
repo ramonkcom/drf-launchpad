@@ -2,10 +2,10 @@ from django.core import exceptions
 from django.test import TransactionTestCase
 
 from ...models import Person
-from ..mixins import UserTestsMixin
+from ..mixins import UserTestMixin
 
 
-class PersonModelTests(UserTestsMixin,
+class PersonModelTests(UserTestMixin,
                        TransactionTestCase):
     """Test cases for the `Person` model.
     """

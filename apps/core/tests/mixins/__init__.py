@@ -1,1 +1,1 @@
-from .user_tests import UserTestsMixin
+from .user_test import UserTestMixin
