@@ -36,7 +36,7 @@ class UserCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema(tags=['User', ])
-class UserPasswordResetAPIView(generics.GenericAPIView):
+class UserPasswordRecoveryAPIView(generics.GenericAPIView):
 
     authentication_classes = []
     permission_classes = [permissions.AllowAny,]
@@ -80,7 +80,7 @@ class UserPasswordResetAPIView(generics.GenericAPIView):
 
 
 @extend_schema(tags=['User', ])
-class UserPasswordUpdateAPIView(generics.GenericAPIView):
+class UserPasswordResetAPIView(generics.GenericAPIView):
 
     authentication_classes = []
     permission_classes = [permissions.AllowAny,]

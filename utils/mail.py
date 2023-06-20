@@ -356,7 +356,7 @@ class PasswordResetEmailMessage(EmailMessage):
             backend_data = {'reset_token': str(
                 self.user.reset_token)}
             backend_url = (
-                reverse('core:user-password-update', args=[self.user.pk]))
+                reverse('core:user-password-reset', args=[self.user.pk]))
 
             print('='*80)
             print('DEBUG INFO:')

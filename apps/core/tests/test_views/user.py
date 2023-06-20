@@ -239,18 +239,18 @@ class UserResetPasswordAPITests(UserTestMixin,
 
     def setUp(self):
         super().setUp()
-        self.reset_password_view = 'core:user-password-reset'
-        self.update_password_view = 'core:user-password-update'
+        self.password_recovery_view = 'core:user-password-recovery'
+        self.password_reset_view = 'core:user-password-reset'
 
-    def api_reset_password(self, **kwargs):
+    def api_password_recovey(self, **kwargs):
         return self.api_post(
-            view_name=self.reset_password_view,
+            view_name=self.password_recovery_view,
             **kwargs
         )
 
-    def api_update_password(self, **kwargs):
+    def api_reset_password(self, **kwargs):
         return self.api_patch(
-            view_name=self.update_password_view,
+            view_name=self.password_reset_view,
             **kwargs
         )
 
@@ -261,7 +261,7 @@ class UserResetPasswordAPITests(UserTestMixin,
         self.assertIsNone(self.user.reset_token)
         self.assertIsNone(self.user.reset_token_date)
 
-        res = self.api_reset_password(data={'email': self.user.email})
+        res = self.api_password_recovey(data={'email': self.user.email})
         self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED)
 
         self.user.refresh_from_db()
@@ -281,10 +281,10 @@ class UserResetPasswordAPITests(UserTestMixin,
 
         new_password = 'NEW#pass!123'
 
-        res = self.api_update_password(url_args=[self.user.pk],
-                                       data={'reset_token': self.user.reset_token,
-                                             'password_1': new_password,
-                                             'password_2': new_password})
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': self.user.reset_token,
+                                            'password_1': new_password,
+                                            'password_2': new_password})
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -306,10 +306,10 @@ class UserResetPasswordAPITests(UserTestMixin,
 
         new_password = 'NEW#pass!123'
 
-        res = self.api_update_password(url_args=[self.user.pk],
-                                       data={'reset_token': self.user.reset_token,
-                                             'password_1': new_password,
-                                             'password_2': new_password})
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': self.user.reset_token,
+                                            'password_1': new_password,
+                                            'password_2': new_password})
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertIn('reset_token', res.data)
@@ -327,10 +327,10 @@ class UserResetPasswordAPITests(UserTestMixin,
 
         new_password = 'NEW#pass!123'
 
-        res = self.api_update_password(url_args=[self.user.pk],
-                                       data={'reset_token': 'INVALID',
-                                             'password_1': new_password,
-                                             'password_2': new_password})
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': 'INVALID',
+                                            'password_1': new_password,
+                                            'password_2': new_password})
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertIn('reset_token', res.data)
@@ -349,10 +349,10 @@ class UserResetPasswordAPITests(UserTestMixin,
         new_password_1 = 'NEW#pass!123'
         new_password_2 = 'INVALID#pass!456'
 
-        res = self.api_update_password(url_args=[self.user.pk],
-                                       data={'reset_token': self.user.reset_token,
-                                             'password_1': new_password_1,
-                                             'password_2': new_password_2})
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': self.user.reset_token,
+                                            'password_1': new_password_1,
+                                            'password_2': new_password_2})
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('password_2', res.data)
