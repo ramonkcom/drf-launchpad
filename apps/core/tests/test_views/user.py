@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework import status
 
-from apps.utils.tests.mixins import APITestMixin
+from utils.tests.mixins import APITestMixin
 
 from ..mixins import UserTestMixin
 from ...models import User

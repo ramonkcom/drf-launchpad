@@ -16,5 +16,5 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ['JWT',],
     'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
     'ROTATE_REFRESH_TOKENS': True,
-    'USER_AUTHENTICATION_RULE': 'apps.core.utils.auth.user_authentication_rule',
+    'USER_AUTHENTICATION_RULE': 'utils.auth.user_authentication_rule',
 }

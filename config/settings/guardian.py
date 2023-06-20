@@ -9,4 +9,4 @@ Full list of Django Guardian settings:
 """
 
 ANONYMOUS_USER_NAME = 'anonymous'
-GUARDIAN_GET_INIT_ANONYMOUS_USER = 'apps.core.utils.permissions.get_anonymous_user'
+GUARDIAN_GET_INIT_ANONYMOUS_USER = 'utils.permissions.get_anonymous_user'

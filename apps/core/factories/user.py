@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 import factory
 from faker import Faker
 
-from apps.utils.factories.mixins import DictFactoryMixin
+from utils.factories.mixins import DictFactoryMixin
 
 
 User = get_user_model()
