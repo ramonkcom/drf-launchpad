@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from rest_framework import status
 
 from utils.tests.mixins import APITestMixin
@@ -230,3 +231,134 @@ class UserAPIUpdateTests(UserTestMixin,
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.email, initial_email)
+
+
+class UserResetPasswordAPITests(UserTestMixin,
+                                APITestMixin,
+                                TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.password_recovery_view = 'core:user-password-recovery'
+        self.password_reset_view = 'core:user-password-reset'
+
+    def api_password_recovey(self, **kwargs):
+        return self.api_post(
+            view_name=self.password_recovery_view,
+            **kwargs
+        )
+
+    def api_reset_password(self, **kwargs):
+        return self.api_patch(
+            view_name=self.password_reset_view,
+            **kwargs
+        )
+
+    def ask_password_reset(self):
+        self.user = self.create_user(email='valid.email@test.com',
+                                     password='OLD#pass!123')
+
+        self.assertIsNone(self.user.reset_token)
+        self.assertIsNone(self.user.reset_token_date)
+
+        res = self.api_password_recovey(data={'email': self.user.email})
+        self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED)
+
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.reset_token)
+        self.assertIsNotNone(self.user.reset_token_date)
+
+    def test_update_password_valid_code_within_24h(self):
+        """It's possible to reset user password with a valid code within 24h
+        """
+
+        self.ask_password_reset()
+
+        now = timezone.now()
+        self.user.reset_token_date = now - timezone.timedelta(
+            hours=23)
+        self.user.save()
+
+        new_password = 'NEW#pass!123'
+
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': self.user.reset_token,
+                                            'password_1': new_password,
+                                            'password_2': new_password})
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        self.user.refresh_from_db()
+        self.assertIsNone(self.user.reset_token)
+        self.assertIsNone(self.user.reset_token_date)
+        self.assertTrue(self.user.check_password(new_password))
+
+    def test_update_password_valid_code_after_24h(self):
+        """It's impossible to reset user password with a valid code after 24h
+        """
+
+        self.ask_password_reset()
+
+        now = timezone.now()
+        self.user.reset_token_date = now - timezone.timedelta(
+            hours=25)
+        self.user.save()
+
+        new_password = 'NEW#pass!123'
+
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': self.user.reset_token,
+                                            'password_1': new_password,
+                                            'password_2': new_password})
+
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('reset_token', res.data)
+
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.reset_token)
+        self.assertIsNotNone(self.user.reset_token_date)
+        self.assertFalse(self.user.check_password(new_password))
+
+    def test_update_password_invalid_code(self):
+        """It's impossible to reset user password with an invalid code
+        """
+
+        self.ask_password_reset()
+
+        new_password = 'NEW#pass!123'
+
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': 'INVALID',
+                                            'password_1': new_password,
+                                            'password_2': new_password})
+
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('reset_token', res.data)
+
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.reset_token)
+        self.assertIsNotNone(self.user.reset_token_date)
+        self.assertFalse(self.user.check_password(new_password))
+
+    def test_update_password_invalid_password(self):
+        """It's impossible to reset user password with an invalid password
+        """
+
+        self.ask_password_reset()
+
+        new_password_1 = 'NEW#pass!123'
+        new_password_2 = 'INVALID#pass!456'
+
+        res = self.api_reset_password(url_args=[self.user.pk],
+                                      data={'reset_token': self.user.reset_token,
+                                            'password_1': new_password_1,
+                                            'password_2': new_password_2})
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password_2', res.data)
+
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.reset_token)
+        self.assertIsNotNone(self.user.reset_token_date)
+        self.assertFalse(self.user.check_password(new_password_1))
+        self.assertFalse(self.user.check_password(new_password_2))

@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import uuid4
 
 from django.contrib.auth.models import (
@@ -10,7 +9,10 @@ from django.core import (
     validators,
 )
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+from utils.mail import PasswordResetEmailMessage
 
 from .person import Person
 from ..managers import UserManager
@@ -31,6 +33,8 @@ class User(AbstractBaseUser,
         is_superuser (bool): Whether the user is superuser or not.
         last_login (datetime): The last login of the user.
         person (Person): The person related to the user.
+        reset_token (str): The token to reset the password of the user.
+        reset_token_date (datetime): The date the reset token was generated.
         user_permissions (Manager<Permission>): The permissions of the user.
         username (str): The username of the user.
     """
@@ -43,6 +47,8 @@ class User(AbstractBaseUser,
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    RESET_TOKEN_TIMEOUT = 60 * 60 * 24
 
     # ---------------------------------- FIELDS ---------------------------------- #
 
@@ -71,6 +77,20 @@ class User(AbstractBaseUser,
     is_staff = models.BooleanField(
         default=False,
         verbose_name=_('is staff?'),
+    )
+
+    reset_token = models.UUIDField(
+        null=True,
+        blank=True,
+        editable=False,
+        verbose_name=_('reset token'),
+    )
+
+    reset_token_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        editable=False,
+        verbose_name=_('reset token date'),
     )
 
     username = models.CharField(
@@ -219,3 +239,72 @@ class User(AbstractBaseUser,
         if (self.is_superuser or self.is_staff) and not self.password:
             error_msg = _('Password is required.')
             raise exceptions.ValidationError({'password': error_msg})
+
+    def clear_reset_token(self, save=False):
+        """Clears the reset token of the user.
+
+        Args:
+            save (bool): Whether to save the user or not.
+        """
+
+        self.reset_token = None
+        self.reset_token_date = None
+
+        if save:
+            self.save()
+
+    def check_reset_token(self, reset_token):
+        """Checks if the reset token is valid.
+
+        Args:
+            reset_token (str): The reset token to be checked.
+
+        Returns:
+            bool: Whether the reset token is valid or not.
+        """
+
+        if not self.reset_token:
+            return False
+
+        expiration_date = self.reset_token_date + timezone.timedelta(
+            seconds=self.RESET_TOKEN_TIMEOUT
+        )
+
+        return all([
+            str(self.reset_token) == reset_token,
+            timezone.now() < expiration_date
+        ])
+
+    def generate_reset_token(self, overwrite=True, save=False):
+        """Generates a new reset token for the user.
+
+        Args:
+            overwrite (bool): Whether to overwrite the current reset token or not.
+            save (bool): Whether to save the user or not.
+
+        Returns:
+            str: The reset token.
+        """
+
+        if overwrite or not self.reset_token:
+            self.reset_token = uuid4()
+            self.reset_token_date = timezone.now()
+
+        if save:
+            self.save()
+
+        return self.reset_token
+
+    def get_password_reset_email(self, **kwargs):
+        """Gets the password reset email.
+
+        Returns:
+            PasswordResetEmailMessage: The password reset email.
+        """
+
+        message_kwargs = {
+            'user': self
+        }
+        message_kwargs.update(kwargs)
+
+        return PasswordResetEmailMessage(**message_kwargs)

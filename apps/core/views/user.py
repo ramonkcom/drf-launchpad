@@ -1,11 +1,17 @@
 from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
 from django.http import Http404
-from drf_spectacular.utils import extend_schema
+from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext_lazy as _
+from drf_spectacular.utils import (
+    extend_schema,
+    inline_serializer,
+)
 from rest_framework import (
     generics,
     permissions,
     response,
+    serializers,
+    status,
 )
 
 from ..models import User
@@ -27,6 +33,112 @@ class UserCreateAPIView(generics.CreateAPIView):
         user = serializer.save()
         verification_email = user.primary_email.get_verification_email()
         verification_email.send()
+
+
+@extend_schema(tags=['User', ])
+class UserPasswordRecoveryAPIView(generics.GenericAPIView):
+
+    authentication_classes = []
+    permission_classes = [permissions.AllowAny,]
+
+    def get_serializer_class(self):
+        return UserSerializer
+
+    def get_queryset(self):
+        if email := self.request.data.get('email', None):
+            return User.objects.filter(email=email)
+
+        return User.objects.none()
+
+    @extend_schema(
+        request=inline_serializer(
+            name='EmailAddressSerializer',
+            fields={
+                'email': serializers.EmailField(required=True),
+            },
+        ),
+        responses={202: None},
+    )
+    def post(self, request, *args, **kwargs):
+        email = self.request.data.get('email', None)
+
+        if not email:
+            error_msg = {'email': _('This field is required.')}
+            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+
+        user = self.get_queryset().first()
+
+        if not user:
+            return response.Response(status=status.HTTP_202_ACCEPTED)
+
+        user.generate_reset_token(overwrite=False, save=True)
+
+        reset_email = user.get_password_reset_email()
+        reset_email.send()
+
+        return response.Response(status=status.HTTP_202_ACCEPTED)
+
+
+@extend_schema(tags=['User', ])
+class UserPasswordResetAPIView(generics.GenericAPIView):
+
+    authentication_classes = []
+    permission_classes = [permissions.AllowAny,]
+
+    def get_serializer_class(self):
+        return UserSerializer
+
+    def get_queryset(self):
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        if pk := self.kwargs.get(lookup_url_kwarg, None):
+            return User.objects.filter(pk=pk)
+
+        return User.objects.none()
+
+    @extend_schema(
+        request=inline_serializer(
+            name='ResetPasswordSerializer',
+            fields={
+                'reset_token': serializers.CharField(required=True),
+                'password_1': serializers.CharField(required=True),
+                'password_2': serializers.CharField(required=True),
+            },
+        ),
+    )
+    def patch(self, request, *args, **kwargs):
+        reset_token = self.request.data.get('reset_token', None)
+        password_1 = self.request.data.get('password_1', None)
+        password_2 = self.request.data.get('password_2', None)
+
+        if not reset_token:
+            error_msg = {'reset_token': _('This field is required.'), }
+            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+
+        if not password_1 and not password_2:
+            error_msg = {'password_1': _('This field is required.'),
+                         'password_2': _('This field is required.'), }
+            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+
+        user = self.get_object()
+
+        if not user.check_reset_token(reset_token):
+            error_msg = {'reset_token': _(
+                'Request is invalid or has expired.')}
+            return response.Response(error_msg, status=status.HTTP_403_FORBIDDEN)
+
+        data = {
+            'password_1': password_1,
+            'password_2': password_2,
+        }
+        serializer = self.get_serializer(
+            user, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        user.clear_reset_token(save=True)
+
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @extend_schema(tags=['User', ])

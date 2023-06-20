@@ -8,6 +8,8 @@ from .views import (
     EmailCreateAPIView,
     EmailUpdateDestroyAPIView,
     UserCreateAPIView,
+    UserPasswordRecoveryAPIView,
+    UserPasswordResetAPIView,
     UserRetrieveUpdateAPIView,
 )
 
@@ -45,4 +47,12 @@ urlpatterns = [
     path('user/me/',
          UserRetrieveUpdateAPIView.as_view(),
          name='user-retrieve-update'),
+
+    path('user/<str:pk>/password/',
+         UserPasswordResetAPIView.as_view(),
+         name='user-password-reset'),
+
+    path('user/password-reset/',
+         UserPasswordRecoveryAPIView.as_view(),
+         name='user-password-recovery'),
 ]
