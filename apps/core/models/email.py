@@ -151,7 +151,7 @@ class Email(models.Model):
         """Gets the verification email.
 
         Returns:
-            VerificationEmail: The verification email.
+            VerificationEmailMessage: The verification email.
         """
 
         message_kwargs = {

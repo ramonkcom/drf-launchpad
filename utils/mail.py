@@ -90,7 +90,7 @@ class EmailMessage:
             return ', '.join([f'{name} <{email}>' for email, name in recipients])
 
         print('\n\n', '='*80, sep='')
-        print(f'SUBJECT: {self.subject}:')
+        print(f'SUBJECT: {self.subject}')
         print(f'TO: {format_recipients(self.to)}')
         print(f'CC: {format_recipients(self.cc)}')
         print(f'BCC: {format_recipients(self.bcc)}')
@@ -156,15 +156,20 @@ class VerificationEmailMessage(EmailMessage):
         super_kwargs = {
             'to': [(self.email.address, self.email.user.full_name),], }
 
+        hours_to_expire = int(Email.CONFIRMATION_CODE_TIMEOUT / 3600)
+
         defaults = {
             'confirmation_base_url': 'https://FRONTEND_URL/CONFIRM_EMAIL_PATH/',
 
-            'title_text': _('Just one more step: verify your email address.'),
+            'subject': _('Verify your email address'),
+
+            'title_text': _('Just one more step: verify your email address'),
 
             'main_text': _('Use the link below to verify this email address '
                            'on your account. If you prefer, you can also '
-                           'copy and paste the link below into your browser. '
-                           'This link will expire in 24 hours.'),
+                           'copy and paste the link directly into your '
+                           'browser. This link will expire in '
+                           '%(n)s hours.') % {'n': hours_to_expire},
 
             'button_text': _('Verify email address'),
 
