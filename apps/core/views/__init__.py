@@ -10,5 +10,7 @@ from .email import (
 )
 from .user import (
     UserCreateAPIView,
+    UserPasswordResetAPIView,
+    UserPasswordUpdateAPIView,
     UserRetrieveUpdateAPIView,
 )
