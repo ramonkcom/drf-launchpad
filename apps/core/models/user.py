@@ -12,6 +12,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from utils.mail import PasswordResetEmailMessage
+
 from .person import Person
 from ..managers import UserManager
 
@@ -292,3 +294,17 @@ class User(AbstractBaseUser,
             self.save()
 
         return self.reset_token
+
+    def get_password_reset_email(self, **kwargs):
+        """Gets the password reset email.
+
+        Returns:
+            PasswordResetEmailMessage: The password reset email.
+        """
+
+        message_kwargs = {
+            'user': self
+        }
+        message_kwargs.update(kwargs)
+
+        return PasswordResetEmailMessage(**message_kwargs)

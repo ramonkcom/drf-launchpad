@@ -242,3 +242,127 @@ class VerificationEmailMessage(EmailMessage):
             print(f'Backend URL: {backend_url}')
             print(f'Backend Payload Data: {backend_data}')
             print('='*80, '\n')
+
+
+class PasswordResetEmailMessage(EmailMessage):
+    """Utility class to help sending password reset emails.
+
+    Attributes:
+        bcc (list[tuple(str, str)]): the list of BCC recipients as tuples,
+            containing the email address and the name of the recipient.
+        button_text (str): the text to be used as the button.
+        cc (list[tuple(str, str)]): the list of CC recipients as tuples,
+            containing the email address and the name of the recipient.
+        email (Email): the email to be verified.
+        footer_text (str): the text to be used as the footer.
+        main_text (str): the text to be used as the body.
+        password_update_base_url (str): the base URL (without parameters) to be
+            used on the link.
+        subject (str): the subject of the email.
+        title_text (str): the text to be used as the title.
+        user (User): the user resetting the password.
+    """
+
+    button_text = None
+    password_update_base_url = None
+    user = None
+
+    def __init__(self, **kwargs):
+        from apps.core.models import User
+        self.user = kwargs.get('user', None)
+
+        if not self.user:
+            error_msg = _('A value for `user` is required.')
+            raise ValueError(error_msg)
+
+        elif not isinstance(self.user, User):
+            error_msg = _('`user` must be an instance of `User`.')
+            raise ValueError(error_msg)
+
+        super_kwargs = {
+            'to': [(self.user.email, self.user.full_name),], }
+
+        hours_to_expire = int(User.RESET_TOKEN_TIMEOUT / 3600)
+
+        defaults = {
+            'password_update_base_url': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
+
+            'subject': _('Reset your password'),
+
+            'title_text': _('Set a new password'),
+
+            'main_text': _('Use the link below to set a new password '
+                           'for your account. If you prefer, you can also '
+                           'copy and paste the link directly into your '
+                           'browser. This link will expire in '
+                           '%(n)s hours.') % {'n': hours_to_expire},
+
+            'button_text': _('Reset password'),
+
+            'footer_text': _('If you did not ask for a password reset, don\'t '
+                             'worry: you can safely ignore this email.'),
+        }
+
+        for attr_name, default_value in defaults.items():
+            super_kwargs[attr_name] = kwargs.get(attr_name, default_value)
+
+        super().__init__(**super_kwargs)
+
+    def get_html_body(self):
+        """Returns the HTML version of the verification email content.
+        """
+
+        password_update_url = self.get_password_update_url()
+        return (
+            f'<h1>{self.title_text}</h1>'
+            f'<p>{self.main_text}</p>'
+            f'<p><a href="{password_update_url}">{self.button_text}</a></p>'
+            f'<p><em>Direct link: {password_update_url}</em></p>'
+            f'<p>{self.footer_text}</p>'
+        )
+
+    def get_password_update_url(self):
+        """Returns the password update URL.
+        """
+
+        from django.utils.http import urlencode
+
+        confirmation_params = {'id': self.user.id,
+                               'reset_token': self.user.reset_token}
+        return f'{self.password_update_base_url}?{urlencode(confirmation_params)}'
+
+    def get_plain_text_body(self):
+        """Returns the plain text version of the verification email content.
+        """
+
+        password_update_url = self.get_password_update_url()
+        return (
+            f'{self.title_text}\n\n'
+            f'{self.main_text}\n\n'
+            f'Use the following link to reset your password:\n'
+            f'{password_update_url}\n\n'
+            f'{self.footer_text}'
+        )
+
+    def print(self):
+        """Prints the verification email to the console.
+        """
+
+        super().print()
+
+        if settings.DEBUG:
+            from django.urls import reverse
+
+            backend_data = {'reset_token': str(
+                self.user.reset_token)}
+            backend_url = (
+                reverse('core:user-password-update', args=[self.user.pk]))
+
+            print('='*80)
+            print('DEBUG INFO:')
+            print('-'*80)
+            print(f'User ID: {self.user.id}')
+            print(f'Reset Token: {self.user.reset_token}')
+            print(f'Backend URL: {backend_url}')
+            print(f'Backend Payload Data: {backend_data}')
+            print('='*80, '\n')
