@@ -5,11 +5,12 @@ from django.db.models import signals
 from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 
+from utils.permissions import assign_basic_permissions
+
 from ..models import (
     Email,
     Person,
 )
-from ..utils.permissions import assign_basic_permissions
 
 
 @receiver(signals.pre_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="generate_username")
