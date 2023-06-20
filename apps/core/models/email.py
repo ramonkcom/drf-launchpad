@@ -135,6 +135,9 @@ class Email(models.Model):
             bool: Whether the confirmation code is valid or not.
         """
 
+        if not self.confirmation_code:
+            return False
+
         expiration_date = self.confirmation_code_date + timezone.timedelta(
             seconds=self.CONFIRMATION_CODE_TIMEOUT
         )
