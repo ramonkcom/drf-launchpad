@@ -1,7 +1,7 @@
 import factory
 import uuid
 
-from apps.utils.factories.mixins import DictFactoryMixin
+from utils.factories.mixins import DictFactoryMixin
 
 from ..models import Person
 
