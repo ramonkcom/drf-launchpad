@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-from ...helpers import model_to_dict
+from utils.helpers import model_to_dict
 
 
 class DictFactoryMixin:
