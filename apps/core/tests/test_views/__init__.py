@@ -3,7 +3,7 @@ from .email import (
     EmailConfirmationAPITests,
 )
 from .user import (
-    UserAPICreateTests,
-    UserAPIUpdateTests,
+    UserCreateAPITests,
     UserResetPasswordAPITests,
+    UserUpdateAPITests,
 )

@@ -8,7 +8,7 @@ from ..mixins import UserTestMixin
 from ...models import User
 
 
-class UserAPICreateTests(UserTestMixin,
+class UserCreateAPITests(UserTestMixin,
                          APITestMixin,
                          TestCase):
 
@@ -101,7 +101,7 @@ class UserAPICreateTests(UserTestMixin,
         self.assertEqual(User.objects.count(), 2)
 
 
-class UserAPIUpdateTests(UserTestMixin,
+class UserUpdateAPITests(UserTestMixin,
                          APITestMixin,
                          TestCase):
 
