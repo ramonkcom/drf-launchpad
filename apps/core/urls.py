@@ -5,6 +5,7 @@ from .views import (
     AuthenticationRenewalAPIView,
     AuthenticationVerificationAPIView,
     EmailConfirmationAPIView,
+    EmailConfirmationRequestAPIView,
     EmailCreateAPIView,
     EmailUpdateDestroyAPIView,
     UserCreateAPIView,
@@ -35,6 +36,10 @@ urlpatterns = [
     path('user/email/<str:pk>/confirmation/',
          EmailConfirmationAPIView.as_view(),
          name='email-confirmation'),
+
+    path('user/email/<str:pk>/confirmation/request/',
+         EmailConfirmationRequestAPIView.as_view(),
+         name='email-confirmation-request'),
 
     path('user/email/',
          EmailCreateAPIView.as_view(),

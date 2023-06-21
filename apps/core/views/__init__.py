@@ -5,8 +5,9 @@ from .auth import (
 )
 from .email import (
     EmailConfirmationAPIView,
+    EmailConfirmationRequestAPIView,
     EmailCreateAPIView,
-    EmailUpdateDestroyAPIView
+    EmailUpdateDestroyAPIView,
 )
 from .user import (
     UserCreateAPIView,
