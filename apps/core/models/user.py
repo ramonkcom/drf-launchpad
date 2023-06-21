@@ -236,10 +236,6 @@ class User(AbstractBaseUser,
 
         self.email = self._meta.model.objects.normalize_email(self.email)
 
-        if (self.is_superuser or self.is_staff) and not self.password:
-            error_msg = _('Password is required.')
-            raise exceptions.ValidationError({'password': error_msg})
-
     def clear_reset_token(self, save=False):
         """Clears the reset token of the user.
 
