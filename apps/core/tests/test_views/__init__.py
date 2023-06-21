@@ -1,6 +1,9 @@
-from .email import EmailAPITests
+from .email import (
+    EmailAPITests,
+    EmailConfirmationAPITests,
+)
 from .user import (
     UserAPICreateTests,
-    UserResetPasswordAPITests,
     UserAPIUpdateTests,
+    UserResetPasswordAPITests,
 )
