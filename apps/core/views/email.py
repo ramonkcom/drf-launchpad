@@ -122,7 +122,7 @@ class EmailCreateAPIView(generics.CreateAPIView):
 class EmailUpdateDestroyAPIView(generics.GenericAPIView):
 
     def get_queryset(self):
-        if not self.request.user:
+        if not self.request.user or self.request.user.is_anonymous:
             return Email.objects.none()
 
         return Email.objects.filter(user=self.request.user)
