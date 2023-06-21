@@ -16,72 +16,9 @@ class EmailAPITests(UserTestMixin,
 
     def setUp(self):
         super().setUp()
-        self.confirm_view = 'core:email-confirmation'
         self.create_view = 'core:email-create'
         self.destroy_view = 'core:email-update-destroy'
         self.partial_update_view = 'core:email-update-destroy'
-
-    def api_confirm(self, **kwargs):
-        return self.api_post(self.confirm_view, **kwargs)
-
-    def test_confirm_user_email_invalid_code(self):
-        """It's impossible to confirm user email with invalid code
-        """
-
-        self.user = self.create_user()
-        email = self.user.primary_email
-        self.assertIsNotNone(email)
-
-        data = {'confirmation_code': uuid.uuid4()}
-        res = self.api_confirm(url_args=[email.pk], data=data)
-
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('confirmation_code', res.data)
-
-        email.refresh_from_db()
-        self.assertFalse(email.is_confirmed)
-
-    def test_confirm_user_email_within_24h(self):
-        """It's possible to confirm user email within 24 hours
-        """
-
-        self.user = self.create_user()
-        email = self.user.primary_email
-        self.assertIsNotNone(email)
-
-        now = timezone.now()
-        email.confirmation_code_date = now - timezone.timedelta(
-            hours=23)
-        email.save()
-
-        data = {'confirmation_code': email.confirmation_code}
-        res = self.api_confirm(url_args=[email.pk], data=data)
-
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-
-        email.refresh_from_db()
-        self.assertTrue(email.is_confirmed)
-
-    def test_confirm_user_email_after_24h(self):
-        """It's impossible to confirm user email after 24 hours
-        """
-
-        self.user = self.create_user()
-        email = self.user.primary_email
-        self.assertIsNotNone(email)
-
-        email.confirmation_code_date = timezone.now() - timezone.timedelta(
-            hours=25)
-        email.save()
-
-        data = {'confirmation_code': email.confirmation_code}
-        res = self.api_confirm(url_args=[email.pk], data=data)
-
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('confirmation_code', res.data)
-
-        email.refresh_from_db()
-        self.assertFalse(email.is_confirmed)
 
     def test_add_user_email(self):
         """It's possible to add new email to user
@@ -213,3 +150,140 @@ class EmailAPITests(UserTestMixin,
 
         self.assertFalse(additional_email.is_primary)
         self.assertEqual(self.user.email, initial_email)
+
+
+class EmailConfirmationAPITests(UserTestMixin,
+                                APITestMixin,
+                                TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.confirm_view = 'core:email-confirmation'
+        self.request_confirmation_view = 'core:email-confirmation-request'
+
+    def api_confirm(self, **kwargs):
+        return self.api_post(self.confirm_view, **kwargs)
+
+    def api_request_confirmation(self, **kwargs):
+        return self.api_post(self.request_confirmation_view, **kwargs)
+
+    def test_confirm_user_email_invalid_code(self):
+        """It's impossible to confirm user email with invalid code
+        """
+
+        self.user = self.create_user()
+        email = self.user.primary_email
+        self.assertIsNotNone(email)
+
+        data = {'confirmation_code': uuid.uuid4()}
+        res = self.api_confirm(url_args=[email.pk], data=data)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('confirmation_code', res.data)
+
+        email.refresh_from_db()
+        self.assertFalse(email.is_confirmed)
+
+    def test_confirm_user_email_within_24h(self):
+        """It's possible to confirm user email within 24 hours
+        """
+
+        self.user = self.create_user()
+        email = self.user.primary_email
+        self.assertIsNotNone(email)
+
+        now = timezone.now()
+        email.confirmation_code_date = now - timezone.timedelta(
+            hours=23)
+        email.save()
+
+        data = {'confirmation_code': email.confirmation_code}
+        res = self.api_confirm(url_args=[email.pk], data=data)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        email.refresh_from_db()
+        self.assertTrue(email.is_confirmed)
+
+    def test_confirm_user_email_after_24h(self):
+        """It's impossible to confirm user email after 24 hours
+        """
+
+        self.user = self.create_user()
+        email = self.user.primary_email
+        self.assertIsNotNone(email)
+
+        email.confirmation_code_date = timezone.now() - timezone.timedelta(
+            hours=25)
+        email.save()
+
+        data = {'confirmation_code': email.confirmation_code}
+        res = self.api_confirm(url_args=[email.pk], data=data)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('confirmation_code', res.data)
+
+        email.refresh_from_db()
+        self.assertFalse(email.is_confirmed)
+
+    def test_request_confirmation_unauthenticated(self):
+        """It's impossible to request email confirmation unauthenticated
+        """
+
+        self.user = self.create_user()
+        self.assertIsNotNone(self.user.primary_email)
+
+        res = self.api_request_confirmation(
+            url_args=[self.user.primary_email.pk])
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_request_confirmation_unconfirmed_email(self):
+        """It's possible to request email confirmation for unconfirmed email
+        """
+
+        self.user = self.create_user()
+        self.authenticate()
+        self.assertFalse(self.user.primary_email.is_confirmed)
+
+        initial_confirmation_code = self.user.primary_email.confirmation_code
+        initial_confirmation_code_date = self.user.primary_email.confirmation_code_date
+
+        res = self.api_request_confirmation(
+            url_args=[self.user.primary_email.pk])
+        self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED)
+
+        self.user.primary_email.refresh_from_db()
+        self.assertNotEqual(self.user.primary_email.confirmation_code,
+                            initial_confirmation_code)
+        self.assertNotEqual(self.user.primary_email.confirmation_code_date,
+                            initial_confirmation_code_date)
+
+    def test_request_confirmation_confirmed_email(self):
+        """It's impossible to request email confirmation for confirmed email
+        """
+
+        self.user = self.create_user()
+        self.authenticate()
+
+        self.user.primary_email.confirm()
+        self.user.primary_email.refresh_from_db()
+        self.assertTrue(self.user.primary_email.is_confirmed)
+        self.assertIsNotNone(self.user.primary_email.confirmation_date)
+
+        initial_confirmation_code = self.user.primary_email.confirmation_code
+        initial_confirmation_code_date = self.user.primary_email.confirmation_code_date
+        initial_confirmation_date = self.user.primary_email.confirmation_date
+
+        res = self.api_request_confirmation(
+            url_args=[self.user.primary_email.pk])
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('non_field_errors', res.data)
+
+        self.user.primary_email.refresh_from_db()
+        self.assertEqual(self.user.primary_email.confirmation_code,
+                         initial_confirmation_code)
+        self.assertEqual(self.user.primary_email.confirmation_code_date,
+                         initial_confirmation_code_date)
+        self.assertEqual(self.user.primary_email.confirmation_date,
+                         initial_confirmation_date)

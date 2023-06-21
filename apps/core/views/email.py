@@ -1,3 +1,5 @@
+from django.http import Http404
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import (
     extend_schema,
     inline_serializer,
@@ -9,7 +11,6 @@ from rest_framework import (
     serializers,
     status,
 )
-from django.utils.translation import gettext_lazy as _
 
 from ..models import Email
 from ..serializers import EmailSerializer
@@ -61,6 +62,43 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
 
 
 @extend_schema(tags=['User', ])
+class EmailConfirmationRequestAPIView(generics.GenericAPIView):
+
+    # NOTE This view does not use DjangoObjectPermissions because
+    # django-guardian understands POST requests as an attempt to create a new
+    # object, and thus it checks for the `add_email` permission, which is not
+    # what we want. Security in this aspect is being handled by the queryset.
+    permission_classes = [permissions.IsAuthenticated,]
+
+    def get_queryset(self):
+        if not self.request.user or self.request.user.is_anonymous:
+            return Email.objects.none()
+
+        return Email.objects.filter(user=self.request.user)
+
+    @extend_schema(
+        request=None,
+        responses={202: None},
+    )
+    def post(self, request, *args, **kwargs):
+        """Requests a new confirmation link for an `Email`.
+        """
+
+        email = self.get_object()
+
+        if email.is_confirmed:
+            error_msg = _('The email is already confirmed.')
+            return response.Response({'non_field_errors': error_msg},
+                                     status.HTTP_400_BAD_REQUEST)
+
+        email.regenerate_confirmation_code(save=True)
+        verification_email = email.get_verification_email()
+        verification_email.send()
+
+        return response.Response(status=status.HTTP_202_ACCEPTED)
+
+
+@extend_schema(tags=['User', ])
 class EmailCreateAPIView(generics.CreateAPIView):
     """Adds a new `Email` to the authenticated user.
     """
@@ -84,7 +122,7 @@ class EmailCreateAPIView(generics.CreateAPIView):
 class EmailUpdateDestroyAPIView(generics.GenericAPIView):
 
     def get_queryset(self):
-        if not self.request.user:
+        if not self.request.user or self.request.user.is_anonymous:
             return Email.objects.none()
 
         return Email.objects.filter(user=self.request.user)
