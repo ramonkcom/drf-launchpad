@@ -1,5 +1,5 @@
 """
-DRF-GUARDIAN SETTINGS
+DJANGO GUARDIAN SETTINGS
 
 About Django Guardian:
 - https://django-guardian.readthedocs.io/en/stable/
