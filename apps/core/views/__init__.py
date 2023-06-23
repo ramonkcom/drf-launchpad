@@ -11,7 +11,7 @@ from .email import (
 )
 from .user import (
     UserCreateAPIView,
-    UserPasswordRecoveryAPIView,
-    UserResetPasswordAPIView,
+    PasswordRecoveryAPIView,
+    PasswordResetAPIView,
     UserRetrieveUpdateAPIView,
 )
