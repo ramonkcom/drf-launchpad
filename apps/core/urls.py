@@ -29,10 +29,6 @@ urlpatterns = [
          AuthenticationVerificationAPIView.as_view(),
          name='auth-verification'),
 
-    path('user/',
-         UserCreateAPIView.as_view(),
-         name='user-create'),
-
     path('user/me/email/<str:pk>/confirmation/',
          EmailConfirmationAPIView.as_view(),
          name='email-confirmation'),
@@ -49,15 +45,19 @@ urlpatterns = [
          EmailUpdateDestroyAPIView.as_view(),
          name='email-update-destroy'),
 
-    path('user/me/',
-         UserRetrieveUpdateAPIView.as_view(),
-         name='user-retrieve-update'),
+    path('password/recovery/',
+         PasswordRecoveryAPIView.as_view(),
+         name='password-recovery'),
 
     path('password/',
          PasswordResetAPIView.as_view(),
          name='password-reset'),
 
-    path('password/recovery/',
-         PasswordRecoveryAPIView.as_view(),
-         name='password-recovery'),
+    path('user/',
+         UserCreateAPIView.as_view(),
+         name='user-create'),
+
+    path('user/me/',
+         UserRetrieveUpdateAPIView.as_view(),
+         name='user-retrieve-update'),
 ]

@@ -19,23 +19,6 @@ from ..serializers import UserSerializer
 
 
 @extend_schema(tags=['User', ])
-class UserCreateAPIView(generics.CreateAPIView):
-    """Creates a new user.
-    """
-
-    authentication_classes = []
-    permission_classes = [permissions.AllowAny,]
-
-    def get_serializer_class(self):
-        return UserSerializer
-
-    def perform_create(self, serializer):
-        user = serializer.save()
-        verification_email = user.primary_email.get_verification_email()
-        verification_email.send()
-
-
-@extend_schema(tags=['User', ])
 class PasswordRecoveryAPIView(generics.GenericAPIView):
 
     authentication_classes = []
@@ -146,6 +129,23 @@ class PasswordResetAPIView(generics.GenericAPIView):
         user.clear_reset_token(save=True)
 
         return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=['User', ])
+class UserCreateAPIView(generics.CreateAPIView):
+    """Creates a new user.
+    """
+
+    authentication_classes = []
+    permission_classes = [permissions.AllowAny,]
+
+    def get_serializer_class(self):
+        return UserSerializer
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+        verification_email = user.primary_email.get_verification_email()
+        verification_email.send()
 
 
 @extend_schema(tags=['User', ])
