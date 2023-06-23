@@ -1,9 +1,9 @@
 from django.urls import path
 
 from .views import (
-    AuthenticationAPIView,
-    AuthenticationRenewalAPIView,
-    AuthenticationVerificationAPIView,
+    TokenObtainAPIView,
+    TokenRefreshAPIView,
+    TokenVerifyAPIView,
     EmailConfirmationAPIView,
     EmailConfirmationRequestAPIView,
     EmailCreateAPIView,
@@ -17,18 +17,6 @@ from .views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('auth/',
-         AuthenticationAPIView.as_view(),
-         name='auth'),
-
-    path('auth/renewal/',
-         AuthenticationRenewalAPIView.as_view(),
-         name='auth-renewal'),
-
-    path('auth/verification/',
-         AuthenticationVerificationAPIView.as_view(),
-         name='auth-verification'),
-
     path('user/me/email/<str:pk>/confirmation/',
          EmailConfirmationAPIView.as_view(),
          name='email-confirmation'),
@@ -52,6 +40,18 @@ urlpatterns = [
     path('password/',
          PasswordResetAPIView.as_view(),
          name='password-reset'),
+
+    path('token/',
+         TokenObtainAPIView.as_view(),
+         name='token'),
+
+    path('token/refresh/',
+         TokenRefreshAPIView.as_view(),
+         name='token-refresh'),
+
+    path('token/verification/',
+         TokenVerifyAPIView.as_view(),
+         name='token-verify'),
 
     path('user/',
          UserCreateAPIView.as_view(),

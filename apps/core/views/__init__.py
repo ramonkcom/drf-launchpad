@@ -1,7 +1,7 @@
 from .auth import (
-    AuthenticationAPIView,
-    AuthenticationRenewalAPIView,
-    AuthenticationVerificationAPIView,
+    TokenObtainAPIView,
+    TokenRefreshAPIView,
+    TokenVerifyAPIView,
 )
 from .email import (
     EmailConfirmationAPIView,
