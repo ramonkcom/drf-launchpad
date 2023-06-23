@@ -239,10 +239,10 @@ class UserResetPasswordAPITests(UserTestMixin,
 
     def setUp(self):
         super().setUp()
-        self.password_recovery_view = 'core:user-password-recovery'
-        self.password_reset_view = 'core:user-password-reset'
+        self.password_recovery_view = 'core:password-recovery'
+        self.password_reset_view = 'core:password-reset'
 
-    def api_password_recovey(self, **kwargs):
+    def api_recover_password(self, **kwargs):
         return self.api_post(
             view_name=self.password_recovery_view,
             **kwargs
@@ -261,7 +261,7 @@ class UserResetPasswordAPITests(UserTestMixin,
         self.assertIsNone(self.user.reset_token)
         self.assertIsNone(self.user.reset_token_date)
 
-        res = self.api_password_recovey(data={'email': self.user.email})
+        res = self.api_recover_password(data={'email': self.user.email})
         self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED)
 
         self.user.refresh_from_db()
@@ -281,8 +281,8 @@ class UserResetPasswordAPITests(UserTestMixin,
 
         new_password = 'NEW#pass!123'
 
-        res = self.api_reset_password(url_args=[self.user.pk],
-                                      data={'reset_token': self.user.reset_token,
+        res = self.api_reset_password(data={'user_id': self.user.pk,
+                                            'reset_token': self.user.reset_token,
                                             'password_1': new_password,
                                             'password_2': new_password})
 
@@ -306,8 +306,8 @@ class UserResetPasswordAPITests(UserTestMixin,
 
         new_password = 'NEW#pass!123'
 
-        res = self.api_reset_password(url_args=[self.user.pk],
-                                      data={'reset_token': self.user.reset_token,
+        res = self.api_reset_password(data={'user_id': self.user.pk,
+                                            'reset_token': self.user.reset_token,
                                             'password_1': new_password,
                                             'password_2': new_password})
 
@@ -327,8 +327,8 @@ class UserResetPasswordAPITests(UserTestMixin,
 
         new_password = 'NEW#pass!123'
 
-        res = self.api_reset_password(url_args=[self.user.pk],
-                                      data={'reset_token': 'INVALID',
+        res = self.api_reset_password(data={'user_id': self.user.pk,
+                                            'reset_token': 'INVALID',
                                             'password_1': new_password,
                                             'password_2': new_password})
 
@@ -349,8 +349,8 @@ class UserResetPasswordAPITests(UserTestMixin,
         new_password_1 = 'NEW#pass!123'
         new_password_2 = 'INVALID#pass!456'
 
-        res = self.api_reset_password(url_args=[self.user.pk],
-                                      data={'reset_token': self.user.reset_token,
+        res = self.api_reset_password(data={'user_id': self.user.pk,
+                                            'reset_token': self.user.reset_token,
                                             'password_1': new_password_1,
                                             'password_2': new_password_2})
 

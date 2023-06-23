@@ -1,7 +1,7 @@
 from .auth import (
-    AuthenticationAPIView,
-    AuthenticationRenewalAPIView,
-    AuthenticationVerificationAPIView,
+    TokenObtainAPIView,
+    TokenRefreshAPIView,
+    TokenVerifyAPIView,
 )
 from .email import (
     EmailConfirmationAPIView,
@@ -11,7 +11,7 @@ from .email import (
 )
 from .user import (
     UserCreateAPIView,
-    UserPasswordRecoveryAPIView,
-    UserPasswordResetAPIView,
+    PasswordRecoveryAPIView,
+    PasswordResetAPIView,
     UserRetrieveUpdateAPIView,
 )

@@ -28,7 +28,7 @@ from rest_framework_simplejwt.views import (
         },
     ),
 )
-class AuthenticationAPIView(TokenObtainPairView):
+class TokenObtainAPIView(TokenObtainPairView):
     """Obtain a access and refresh token pair from username and password.
     """
 
@@ -49,7 +49,7 @@ class AuthenticationAPIView(TokenObtainPairView):
         },
     ),
 )
-class AuthenticationRenewalAPIView(TokenRefreshView):
+class TokenRefreshAPIView(TokenRefreshView):
     """Obtain a new access and refresh token pair from a refresh token.
     """
 
@@ -64,6 +64,6 @@ class AuthenticationRenewalAPIView(TokenRefreshView):
         },
     ),
 )
-class AuthenticationVerificationAPIView(TokenVerifyView):
+class TokenVerifyAPIView(TokenVerifyView):
     """Verify whether an access or refresh token is valid or not.
     """

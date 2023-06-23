@@ -353,10 +353,9 @@ class PasswordResetEmailMessage(EmailMessage):
         if settings.DEBUG:
             from django.urls import reverse
 
-            backend_data = {'reset_token': str(
-                self.user.reset_token)}
-            backend_url = (
-                reverse('core:user-password-reset', args=[self.user.pk]))
+            backend_data = {'user_id': self.user.id,
+                            'reset_token': str(self.user.reset_token)}
+            backend_url = reverse('core:password-reset')
 
             print('='*80)
             print('DEBUG INFO:')
