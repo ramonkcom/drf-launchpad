@@ -33,19 +33,19 @@ urlpatterns = [
          UserCreateAPIView.as_view(),
          name='user-create'),
 
-    path('user/email/<str:pk>/confirmation/',
+    path('user/me/email/<str:pk>/confirmation/',
          EmailConfirmationAPIView.as_view(),
          name='email-confirmation'),
 
-    path('user/email/<str:pk>/confirmation/request/',
+    path('user/me/email/<str:pk>/confirmation/request/',
          EmailConfirmationRequestAPIView.as_view(),
          name='email-confirmation-request'),
 
-    path('user/email/',
+    path('user/me/email/',
          EmailCreateAPIView.as_view(),
          name='email-create'),
 
-    path('user/email/<str:pk>/',
+    path('user/me/email/<str:pk>/',
          EmailUpdateDestroyAPIView.as_view(),
          name='email-update-destroy'),
 
