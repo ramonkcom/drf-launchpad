@@ -239,7 +239,7 @@ class UserResetPasswordAPITests(UserTestMixin,
 
     def setUp(self):
         super().setUp()
-        self.password_recovery_view = 'core:user-password-recovery'
+        self.password_recovery_view = 'core:password-recovery'
         self.password_reset_view = 'core:password-reset'
 
     def api_recover_password(self, **kwargs):
