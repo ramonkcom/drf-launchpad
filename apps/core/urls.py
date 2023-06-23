@@ -17,19 +17,19 @@ from .views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('user/me/email/<str:pk>/confirmation/',
+    path('users/me/emails/<str:pk>/confirmation/',
          EmailConfirmationAPIView.as_view(),
          name='email-confirmation'),
 
-    path('user/me/email/<str:pk>/confirmation/request/',
+    path('users/me/emails/<str:pk>/confirmation/request/',
          EmailConfirmationRequestAPIView.as_view(),
          name='email-confirmation-request'),
 
-    path('user/me/email/',
+    path('users/me/emails/',
          EmailCreateAPIView.as_view(),
          name='email-create'),
 
-    path('user/me/email/<str:pk>/',
+    path('users/me/emails/<str:pk>/',
          EmailUpdateDestroyAPIView.as_view(),
          name='email-update-destroy'),
 
@@ -53,11 +53,11 @@ urlpatterns = [
          TokenVerifyAPIView.as_view(),
          name='token-verify'),
 
-    path('user/',
+    path('users/',
          UserCreateAPIView.as_view(),
          name='user-create'),
 
-    path('user/me/',
+    path('users/me/',
          UserRetrieveUpdateAPIView.as_view(),
          name='user-retrieve-update'),
 ]
