@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from ..models import Person
+from ..models import Profile
 
 
-class PersonInline(admin.StackedInline):
+class ProfileInline(admin.StackedInline):
     can_delete = False
     extra = 0
-    model = Person
-    verbose_name = _('personal information')
+    model = Profile
+    verbose_name = _('profile information')
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = (

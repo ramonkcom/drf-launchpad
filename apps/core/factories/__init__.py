@@ -1,3 +1,3 @@
 from .email import EmailFactory
-from .person import PersonFactory
+from .profile import ProfileFactory
 from .user import UserFactory

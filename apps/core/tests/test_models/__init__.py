@@ -1,2 +1,2 @@
-from .person import PersonModelTests
+from .profile import ProfileModelTests
 from .user import UserModelTests

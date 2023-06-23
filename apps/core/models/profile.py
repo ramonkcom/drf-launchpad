@@ -5,8 +5,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Person(models.Model):
-    """Represents the personal data of an `User` in the system.
+class Profile(models.Model):
+    """Represents the profile data of an user in the system.
 
     Attributes:
         id (uuid): The unique identifier of the user.
@@ -15,8 +15,8 @@ class Person(models.Model):
     """
 
     class Meta:
-        verbose_name = _('person')
-        verbose_name_plural = _('people')
+        verbose_name = _('profile')
+        verbose_name_plural = _('profiles')
         ordering = ['family_name', 'given_name',]
 
     # ---------------------------------- FIELDS ---------------------------------- #
@@ -30,8 +30,8 @@ class Person(models.Model):
     user = models.OneToOneField(
         to='core.User',
         on_delete=models.CASCADE,
-        related_name='person',
-        related_query_name='person',
+        related_name='profile',
+        related_query_name='profile',
         verbose_name=_('user'),
     )
 
@@ -56,23 +56,23 @@ class Person(models.Model):
     @classmethod
     @property
     def factory(self):
-        """Returns the factory for the `Person` model.
+        """Returns the factory for the `Profile` model.
 
         Returns:
-            PersonFactory: The factory for the `Person` model.
+            ProfileFactory: The factory for the `Profile` model.
         """
 
-        from ..factories import PersonFactory
-        return PersonFactory
+        from ..factories import ProfileFactory
+        return ProfileFactory
 
     @property
     def full_name(self) -> str:
-        """Returns the full name of the person.
+        """Returns the full name of the profile.
 
-        Returns the given name followed by the family name of the person.
+        Returns the given name followed by the family name of the profile.
 
         Returns:
-            str: The full name of the person.
+            str: The full name of the profile.
         """
 
         full_name = ' '.join(

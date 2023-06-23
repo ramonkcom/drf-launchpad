@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from utils.mail import PasswordResetEmailMessage
 
-from .person import Person
+from .profile import Profile
 from ..managers import UserManager
 
 
@@ -32,7 +32,7 @@ class User(AbstractBaseUser,
         is_staff (bool): Whether the user is staff or not.
         is_superuser (bool): Whether the user is superuser or not.
         last_login (datetime): The last login of the user.
-        person (Person): The person related to the user.
+        profile (Profile): The profile data of the user.
         reset_token (str): The token to reset the password of the user.
         reset_token_date (datetime): The date the reset token was generated.
         user_permissions (Manager<Permission>): The permissions of the user.
@@ -132,7 +132,7 @@ class User(AbstractBaseUser,
             str: The full name of the user.
         """
 
-        return self.person.full_name
+        return self.profile.full_name
 
     @property
     def is_anonymous(self):
@@ -160,66 +160,66 @@ class User(AbstractBaseUser,
 
     @classmethod
     @property
-    def _person_fields_names(cls):
-        """Returns the fields names of the `Person` model.
+    def _profile_fields_names(cls):
+        """Returns the fields names of the `Profile` model.
 
         Returns:
-            list: The fields names of the `Person` model.
+            list: The fields names of the `Profile` model.
         """
 
-        if not hasattr(cls, '_person_fields_names_cache'):
-            cls._person_fields_names_cache = [f.name for f in Person._meta.fields
-                                              if not f.primary_key and f.name != 'user']
+        if not hasattr(cls, '_profile_fields_names_cache'):
+            cls._profile_fields_names_cache = [f.name for f in Profile._meta.fields
+                                               if not f.primary_key and f.name != 'user']
 
-        return cls._person_fields_names_cache
+        return cls._profile_fields_names_cache
 
-    def _extract_person_kwargs(self, kwargs):
-        """Extracts the person kwargs from the kwargs.
+    def _extract_profile_kwargs(self, kwargs):
+        """Extracts the profile kwargs from the kwargs.
 
         Args:
-            kwargs (dict): The kwargs to extract the person kwargs from.
+            kwargs (dict): The kwargs to extract the profile kwargs from.
 
         Returns:
-            dict: The kwargs without the person kwargs.
+            dict: The kwargs without the profile kwargs.
         """
 
-        person_kwargs = {}
-        for field in Person._meta.fields:
+        profile_kwargs = {}
+        for field in Profile._meta.fields:
             if any([field.name not in kwargs,
                     field.primary_key,
                     field.name == 'user']):
                 continue
 
-            person_kwargs[field.name] = kwargs.pop(field.name)
+            profile_kwargs[field.name] = kwargs.pop(field.name)
 
-        self.__dict__['_person_attrs'] = person_kwargs
+        self.__dict__['_profile_attrs'] = profile_kwargs
         return kwargs
 
     def __init__(self, *args, **kwargs):
-        kwargs = self._extract_person_kwargs(kwargs)
+        kwargs = self._extract_profile_kwargs(kwargs)
         super().__init__(*args, **kwargs)
 
     def __getattr__(self, attr_name):
-        if attr_name not in self._person_fields_names:
+        if attr_name not in self._profile_fields_names:
             return super().__getattribute__(attr_name)
 
         try:
-            person = super().__getattribute__('person')
-            return getattr(person, attr_name)
+            profile = super().__getattribute__('profile')
+            return getattr(profile, attr_name)
 
-        except Person.DoesNotExist:
-            if '_person_attrs' in self.__dict__:
-                return self.__dict__['_person_attrs'][attr_name]
+        except Profile.DoesNotExist:
+            if '_profile_attrs' in self.__dict__:
+                return self.__dict__['_profile_attrs'][attr_name]
 
             else:
                 return None
 
     def __setattr__(self, attr_name, value):
-        if attr_name in self._person_fields_names:
-            if '_person_attrs' not in self.__dict__:
-                self.__dict__['_person_attrs'] = {}
+        if attr_name in self._profile_fields_names:
+            if '_profile_attrs' not in self.__dict__:
+                self.__dict__['_profile_attrs'] = {}
 
-            self.__dict__['_person_attrs'][attr_name] = value
+            self.__dict__['_profile_attrs'][attr_name] = value
 
         else:
             super().__setattr__(attr_name, value)

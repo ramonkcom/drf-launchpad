@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .email import EmailInline
 from ..models import User
-from .person import PersonInline
+from .profile import ProfileInline
 
 
 class UserAdmin(auth_admin.UserAdmin):
@@ -14,7 +14,7 @@ class UserAdmin(auth_admin.UserAdmin):
             'all': ('css/custom.css', 'core/css/admin.css',)
         }
 
-    inlines = [PersonInline, EmailInline,]
+    inlines = [ProfileInline, EmailInline,]
 
     readonly_fields = ['date_joined',]
 
@@ -26,7 +26,7 @@ class UserAdmin(auth_admin.UserAdmin):
     list_filter = ['is_active', 'is_staff', 'is_superuser',]
 
     search_fields = ['username', 'email', 'emails__address',
-                     'person__given_name', 'person__family_name',]
+                     'profile__given_name', 'profile__family_name',]
 
     def get_fieldsets(self, request, obj=None):
 

@@ -7,16 +7,16 @@ from django.db.models import (
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from ..models import Person
+from ..models import Profile
 
 
-@receiver(signals.pre_delete, sender=Person, dispatch_uid="prevent_person_direct_deletion")
-def prevent_person_direct_deletion(sender, instance, using, origin, **kwargs):
-    """Prevents direct `Person` deletion.
+@receiver(signals.pre_delete, sender=Profile, dispatch_uid="prevent_profile_direct_deletion")
+def prevent_profile_direct_deletion(sender, instance, using, origin, **kwargs):
+    """Prevents direct deletion of a profile.
 
     Args:
-        sender (cls): The model triggering the signal (`Person`).
-        instance (Person): The person being deleted.
+        sender (cls): The model triggering the signal (`Profile`).
+        instance (Profile): The profile being deleted.
         using (str): The database alias being used.
         origin (cls): The Model or QuerySet class originating the deletion.
     """
@@ -25,5 +25,5 @@ def prevent_person_direct_deletion(sender, instance, using, origin, **kwargs):
             isinstance(origin, QuerySet) and origin.model == get_user_model())):
         return
 
-    error_msg = _('Can\'t delete a person directly.')
+    error_msg = _('Can\'t delete a profile directly.')
     raise PermissionDenied(error_msg)

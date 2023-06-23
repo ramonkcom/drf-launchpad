@@ -41,8 +41,8 @@ class UserFactory(DictFactoryMixin,
 
     password = factory.Faker('password')
 
-    person = factory.RelatedFactory(
-        'apps.core.factories.PersonFactory',
+    profile = factory.RelatedFactory(
+        'apps.core.factories.ProfileFactory',
         factory_related_name='user',
         given_name=factory.SelfAttribute('..given_name'),
         family_name=factory.SelfAttribute('..family_name'),
@@ -52,9 +52,9 @@ class UserFactory(DictFactoryMixin,
 
     @classmethod
     def _generate(cls, strategy, params):
-        setattr(User, '_skip_person_creation', True)
+        setattr(User, '_skip_profile_creation', True)
         return_value = super()._generate(strategy, params)
-        setattr(User, '_skip_person_creation', False)
+        setattr(User, '_skip_profile_creation', False)
         return return_value
 
     @classmethod
@@ -65,8 +65,8 @@ class UserFactory(DictFactoryMixin,
         user = cls.build()
 
         user_dict = cls._build_dict(user, **kwargs)
-        person_dict = cls._build_dict(user.person, **kwargs)
-        user_dict.update(person_dict)
+        profile_dict = cls._build_dict(user.profile, **kwargs)
+        user_dict.update(profile_dict)
 
         exclude_fields.extend(f for f in [
             'id',

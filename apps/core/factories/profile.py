@@ -1,16 +1,15 @@
 import factory
-import uuid
 
 from utils.factories.mixins import DictFactoryMixin
 
-from ..models import Person
+from ..models import Profile
 
 
-class PersonFactory(DictFactoryMixin,
-                    factory.django.DjangoModelFactory):
+class ProfileFactory(DictFactoryMixin,
+                     factory.django.DjangoModelFactory):
 
     class Meta:
-        model = Person
+        model = Profile
 
     family_name = factory.Faker('last_name')
 

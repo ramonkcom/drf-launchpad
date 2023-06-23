@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from .email import EmailSerializer
 from ..models import User
-from .person import PersonSerializer
+from .profile import ProfileSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,9 +26,9 @@ class UserSerializer(serializers.ModelSerializer):
     def get_fields(self):
         fields = super().get_fields()
 
-        person_serializer = PersonSerializer()
-        for field_name, field in person_serializer.get_fields().items():
-            field.source = f'person.{field_name}'
+        profile_serializer = ProfileSerializer()
+        for field_name, field in profile_serializer.get_fields().items():
+            field.source = f'profile.{field_name}'
             fields[field_name] = field
 
         fields['password_1'] = serializers.CharField(write_only=True)
@@ -50,8 +50,8 @@ class UserSerializer(serializers.ModelSerializer):
         if password_1:
             data['password'] = password_1
 
-        person = data.pop('person', {})
-        for field_name, value in person.items():
+        profile = data.pop('profile', {})
+        for field_name, value in profile.items():
             data[field_name] = value
 
         return data

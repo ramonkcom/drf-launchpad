@@ -3,7 +3,7 @@ from datetime import datetime
 from django.test import TestCase
 
 from ...models import (
-    Person,
+    Profile,
     User,
 )
 from ..mixins import UserTestMixin
@@ -29,8 +29,8 @@ class UserManagerTests(UserTestMixin,
         auto_username = 'test_' + str(int(datetime.now().timestamp()))[-5:-2]
         self.assertTrue(user_2.username.startswith(auto_username))
 
-    def test_manager_create_user_accepts_person_data(self):
-        """`UserManager.create_user` handles personal data
+    def test_manager_create_user_accepts_profile_data(self):
+        """`UserManager.create_user` handles profile data
         """
 
         # NOTE: 'django-guardian' creates an anonymous user on startup
@@ -41,10 +41,10 @@ class UserManagerTests(UserTestMixin,
             given_name='Ramon',
             family_name='Kayo',
         )
-        self.assertEqual(Person.objects.count(), 1)
-        self.assertEqual(Person.objects.first(), user.person)
+        self.assertEqual(Profile.objects.count(), 1)
+        self.assertEqual(Profile.objects.first(), user.profile)
 
         self.assertEqual(user.given_name, 'Ramon')
         self.assertEqual(user.family_name, 'Kayo')
-        self.assertEqual(user.person.given_name, 'Ramon')
-        self.assertEqual(user.person.family_name, 'Kayo')
+        self.assertEqual(user.profile.given_name, 'Ramon')
+        self.assertEqual(user.profile.family_name, 'Kayo')

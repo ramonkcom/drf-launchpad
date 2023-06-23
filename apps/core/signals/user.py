@@ -9,7 +9,7 @@ from utils.permissions import assign_basic_permissions
 
 from ..models import (
     Email,
-    Person,
+    Profile,
 )
 
 
@@ -45,7 +45,7 @@ def generate_username(sender, instance, **kwargs):
 def user_initial_setup(sender, instance, created, **kwargs):
     """Initial setup for newly created `User`.
 
-    This function creates a `Person` and an `Email` object for newly created
+    This function creates a `Profile` and an `Email` object for newly created
     `User` objects, and assigns the necessary permissions to it, so it can
     change its own data.
 
@@ -59,23 +59,23 @@ def user_initial_setup(sender, instance, created, **kwargs):
     if user.is_anonymous:
         return
 
-    person_kwargs = getattr(user, '_person_attrs', {})
+    profile_kwargs = getattr(user, '_profile_attrs', {})
 
     if created:
         Email.objects.create(user=user,
                              address=user.email)
 
-        if not getattr(sender, '_skip_person_creation', False):
-            person_kwargs['user'] = user
-            Person.objects.create(**person_kwargs)
+        if not getattr(sender, '_skip_profile_creation', False):
+            profile_kwargs['user'] = user
+            Profile.objects.create(**profile_kwargs)
 
         assign_basic_permissions(user)
         assign_perm("view_user", user, user)
         assign_perm("change_user", user, user)
 
     else:
-        if person_kwargs:
-            for field_name, value in person_kwargs.items():
-                setattr(user.person, field_name, value)
+        if profile_kwargs:
+            for field_name, value in profile_kwargs.items():
+                setattr(user.profile, field_name, value)
 
-        user.person.save()
+        user.profile.save()

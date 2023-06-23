@@ -1,3 +1,3 @@
 from .email import EmailSerializer
-from .person import PersonSerializer
+from .profile import ProfileSerializer
 from .user import UserSerializer

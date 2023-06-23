@@ -1,3 +1,3 @@
 from .email import Email
-from .person import Person
+from .profile import Profile
 from .user import User

@@ -125,14 +125,14 @@ class UserUpdateAPITests(UserTestMixin,
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, 'new_valid_username')
 
-    def test_update_user_person_valid_data(self):
-        """It's possible to update an user personal data with valid data
+    def test_update_user_profile_valid_data(self):
+        """It's possible to update an user profile data with valid data
         """
 
         self.user = self.create_user(given_name=None,
                                      family_name=None)
-        self.assertEqual(self.user.person.given_name, None)
-        self.assertEqual(self.user.person.family_name, None)
+        self.assertEqual(self.user.profile.given_name, None)
+        self.assertEqual(self.user.profile.family_name, None)
 
         self.authenticate()
         data = {'given_name': 'Ramon', 'family_name': 'Kayo'}
@@ -141,8 +141,8 @@ class UserUpdateAPITests(UserTestMixin,
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         self.user.refresh_from_db()
-        self.assertEqual(self.user.person.given_name, 'Ramon')
-        self.assertEqual(self.user.person.family_name, 'Kayo')
+        self.assertEqual(self.user.profile.given_name, 'Ramon')
+        self.assertEqual(self.user.profile.family_name, 'Kayo')
 
     def test_update_user_password_directly(self):
         """It's impossible to update user password directly

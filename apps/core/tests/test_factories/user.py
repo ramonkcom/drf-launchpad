@@ -20,17 +20,17 @@ class UserFactoryTests(TestCase):
                 self.assertFalse(user.is_staff)
                 self.assertFalse(user.is_superuser)
 
-        def assert_personal_data(user):
+        def assert_profile_data(user):
             if type(user) is dict:
                 self.assertIsNotNone(user['given_name'])
                 self.assertIsNotNone(user['family_name'])
 
             else:
-                self.assertIsNotNone(user.person)
+                self.assertIsNotNone(user.profile)
                 self.assertIsNotNone(user.given_name)
-                self.assertEqual(user.given_name, user.person.given_name)
+                self.assertEqual(user.given_name, user.profile.given_name)
                 self.assertIsNotNone(user.family_name)
-                self.assertEqual(user.family_name, user.person.family_name)
+                self.assertEqual(user.family_name, user.profile.family_name)
 
         def assert_username(user):
             if type(user) is dict:
@@ -59,7 +59,7 @@ class UserFactoryTests(TestCase):
 
         self.assertIsInstance(user_dict, dict)
         assert_roles(user_dict)
-        assert_personal_data(user_dict)
+        assert_profile_data(user_dict)
         assert_username(user_dict)
         assert_email(user_dict)
 
@@ -67,7 +67,7 @@ class UserFactoryTests(TestCase):
 
         self.assertIsInstance(built_user, User)
         assert_roles(built_user)
-        assert_personal_data(built_user)
+        assert_profile_data(built_user)
         assert_username(built_user)
         assert_email(built_user)
 
@@ -77,7 +77,7 @@ class UserFactoryTests(TestCase):
 
         self.assertIsInstance(created_user, User)
         assert_roles(created_user)
-        assert_personal_data(created_user)
+        assert_profile_data(created_user)
         assert_username(created_user)
         assert_email(created_user)
 
@@ -103,9 +103,9 @@ class UserFactoryTests(TestCase):
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
         self.assertEqual(user.given_name, 'Ramon')
-        self.assertEqual(user.person.given_name, 'Ramon')
+        self.assertEqual(user.profile.given_name, 'Ramon')
         self.assertEqual(user.family_name, 'Kayo')
-        self.assertEqual(user.person.family_name, 'Kayo')
+        self.assertEqual(user.profile.family_name, 'Kayo')
         self.assertEqual(user.username, 'ramon_kayo')
         self.assertEqual(user.email, 'ramon@test.com')
 
@@ -128,9 +128,9 @@ class UserFactoryTests(TestCase):
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
         self.assertEqual(user.given_name, 'Ramon')
-        self.assertEqual(user.person.given_name, 'Ramon')
+        self.assertEqual(user.profile.given_name, 'Ramon')
         self.assertEqual(user.family_name, 'Kayo')
-        self.assertEqual(user.person.family_name, 'Kayo')
+        self.assertEqual(user.profile.family_name, 'Kayo')
         self.assertEqual(user.username, 'ramon_kayo')
         self.assertEqual(user.email, 'ramon@test.com')
 
@@ -169,7 +169,7 @@ class UserFactoryTests(TestCase):
         self.assertNotIn('date_joined', user_dict)
         self.assertNotIn('groups', user_dict)
         self.assertNotIn('user_permissions', user_dict)
-        # NOTE This is `Person` FK to `User`
+        # NOTE This is `Profile` FK to `User`
         self.assertNotIn('user', user_dict)
         self.assertIn('password', user_dict)
 

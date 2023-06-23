@@ -1,4 +1,4 @@
-/* Remove redundant titles on `Person` inline */
-.inline-related.dynamic-person h3 {
+/* Remove redundant titles on `ProfileInline` on admin pages */
+.inline-related.dynamic-profile h3 {
   display: none;
 }
