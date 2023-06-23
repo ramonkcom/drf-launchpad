@@ -89,10 +89,10 @@ class UserResetPasswordAPIView(generics.GenericAPIView):
         return UserSerializer
 
     def get_queryset(self):
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        user_id = self.request.data.get('user_id', None)
 
-        if pk := self.kwargs.get(lookup_url_kwarg, None):
-            return User.objects.filter(pk=pk)
+        if user_id:
+            return User.objects.filter(pk=user_id)
 
         return User.objects.none()
 
@@ -107,9 +107,14 @@ class UserResetPasswordAPIView(generics.GenericAPIView):
         ),
     )
     def patch(self, request, *args, **kwargs):
+        user_id = self.request.data.get('user_id', None)
         reset_token = self.request.data.get('reset_token', None)
         password_1 = self.request.data.get('password_1', None)
         password_2 = self.request.data.get('password_2', None)
+
+        if not user_id:
+            error_msg = {'user_id': _('This field is required.'), }
+            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
         if not reset_token:
             error_msg = {'reset_token': _('This field is required.'), }
@@ -120,7 +125,9 @@ class UserResetPasswordAPIView(generics.GenericAPIView):
                          'password_2': _('This field is required.'), }
             return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
-        user = self.get_object()
+        user = self.get_queryset().first()
+        if not user:
+            raise Http404
 
         if not user.check_reset_token(reset_token):
             error_msg = {'reset_token': _(

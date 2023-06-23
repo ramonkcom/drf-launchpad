@@ -53,9 +53,9 @@ urlpatterns = [
          UserRetrieveUpdateAPIView.as_view(),
          name='user-retrieve-update'),
 
-    path('user/<str:pk>/password/',
+    path('password/',
          UserResetPasswordAPIView.as_view(),
-         name='user-password-reset'),
+         name='password-reset'),
 
     path('user/password/recovery/',
          UserPasswordRecoveryAPIView.as_view(),
