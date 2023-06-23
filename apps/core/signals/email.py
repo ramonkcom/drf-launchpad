@@ -9,7 +9,7 @@ from ..models import Email
 def assign_email_permissions(sender, instance, created, **kwargs):
     """Adds the basic permissions to handle `Email` objects.
 
-    Adds the necessary permissions to the `User` so it can view, change and
+    Adds the necessary permissions to the user so it can view, change and
     delete its own `Email` objects.
 
     Args:

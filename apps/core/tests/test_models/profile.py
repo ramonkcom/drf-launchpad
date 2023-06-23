@@ -30,7 +30,7 @@ class ProfileModelTests(UserTestMixin,
         self.assertEqual(str(user.profile), f'{user.username} ({user.email})')
 
     def test_delete_profile_forbidden(self):
-        """It's impossible to delete `Profile` instances
+        """It's impossible to delete `Profile` instances directly
         """
 
         self.assertEqual(Profile.objects.count(), 0)
@@ -47,7 +47,7 @@ class ProfileModelTests(UserTestMixin,
         self.assertEqual(Profile.objects.count(), 1)
 
     def test_create_profile_without_user_forbidden(self):
-        """It's impossible to create `Profile` instances without an `User`
+        """It's impossible to create `Profile` instances directly
         """
 
         self.assertEqual(Profile.objects.count(), 0)

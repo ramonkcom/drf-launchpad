@@ -37,7 +37,7 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
         ),
     )
     def post(self, request, *args, **kwargs):
-        """Confirms an `Email` checking it against its confirmation code.
+        """Confirms an email checking it against its confirmation code.
         """
 
         confirmation_code = self.request.data.get(
@@ -81,7 +81,7 @@ class EmailConfirmationRequestAPIView(generics.GenericAPIView):
         responses={202: None},
     )
     def post(self, request, *args, **kwargs):
-        """Requests a new confirmation link for an `Email`.
+        """Requests a new confirmation link for an email.
         """
 
         email = self.get_object()
@@ -100,7 +100,7 @@ class EmailConfirmationRequestAPIView(generics.GenericAPIView):
 
 @extend_schema(tags=['User', ])
 class EmailCreateAPIView(generics.CreateAPIView):
-    """Adds a new `Email` to the authenticated user.
+    """Adds a new email to the authenticated user.
     """
 
     def get_queryset(self):
@@ -139,7 +139,7 @@ class EmailUpdateDestroyAPIView(generics.GenericAPIView):
         ),
     )
     def patch(self, request, *args, **kwargs):
-        """Updates an `Email` of the authenticated user.
+        """Updates an email of the authenticated user.
         """
 
         email = self.get_object()
@@ -171,7 +171,7 @@ class EmailUpdateDestroyAPIView(generics.GenericAPIView):
         return response.Response(data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        """Deletes an `Email` from the authenticated user.
+        """Deletes an email from the authenticated user.
         """
 
         email = self.get_object()

@@ -20,7 +20,7 @@ from ..serializers import UserSerializer
 
 @extend_schema(tags=['User', ])
 class UserCreateAPIView(generics.CreateAPIView):
-    """Creates a new `User`.
+    """Creates a new user.
     """
 
     authentication_classes = []
@@ -143,7 +143,7 @@ class UserPasswordResetAPIView(generics.GenericAPIView):
 
 @extend_schema(tags=['User', ])
 class UserRetrieveUpdateAPIView(generics.GenericAPIView):
-    """Retrieves and updates the authenticated `User`.
+    """Retrieves and updates the authenticated user.
     """
 
     def get_serializer_class(self):
@@ -162,7 +162,7 @@ class UserRetrieveUpdateAPIView(generics.GenericAPIView):
             raise Http404  # pylint: disable=raise-missing-from
 
     def get(self, request, *args, **kwargs):
-        """Retrieves the authenticated `User`.
+        """Retrieves the authenticated user.
         """
 
         instance = self.get_queryset().first()
@@ -170,7 +170,7 @@ class UserRetrieveUpdateAPIView(generics.GenericAPIView):
         return response.Response(serializer.data)
 
     def patch(self, request, *args, **kwargs):
-        """Updates the authenticated `User`.
+        """Updates the authenticated user.
         """
 
         instance = self.get_object()

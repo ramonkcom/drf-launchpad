@@ -15,9 +15,9 @@ from ..models import (
 
 @receiver(signals.pre_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="generate_username")
 def generate_username(sender, instance, **kwargs):
-    """Generates a username for the `User` being saved.
+    """Generates a username for the user being saved.
 
-    This function generates a username for the `User` being saved, if it
+    This function generates a username for the user being saved, if it
     doesn't have one already. The username is generated from the user's email
     address, and if it already exists, a numeric sequence based on the
     timestamp is appended to it (e.g. `john_12345`).
@@ -43,7 +43,7 @@ def generate_username(sender, instance, **kwargs):
 
 @receiver(signals.post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_initial_setup")
 def user_initial_setup(sender, instance, created, **kwargs):
-    """Initial setup for newly created `User`.
+    """Initial setup for newly created user.
 
     This function creates a `Profile` and an `Email` object for newly created
     `User` objects, and assigns the necessary permissions to it, so it can

@@ -43,7 +43,7 @@ class UserModelTests(UserTestMixin,
         self.assertEqual(Profile.objects.count(), 0)
 
     def test_user_handles_profile_data(self):
-        """`User` model handles profile data
+        """`User` model handles `Profile` data
         """
 
         user = User(given_name='Ramon',

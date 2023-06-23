@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 def assign_basic_permissions(user):
-    """Assigns the basic permissions to an `User`.
+    """Assigns the basic permissions to an user.
 
     This function assigns the basic permissions to an user (usually a newly
     created one), so it can handle its own data.
@@ -34,7 +34,7 @@ def get_anonymous_user(user_model):
     See: https://django-guardian.readthedocs.io/en/stable/userguide/custom-user-model.html#custom-user-model-anonymous
 
     Args:
-        user_model (cls): The `User` model.
+        user_model (cls): The system user model.
 
     Returns:
         User: The created anonymous user.
