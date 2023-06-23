@@ -242,7 +242,7 @@ class UserResetPasswordAPITests(UserTestMixin,
         self.password_recovery_view = 'core:user-password-recovery'
         self.password_reset_view = 'core:user-password-reset'
 
-    def api_password_recovey(self, **kwargs):
+    def api_recover_password(self, **kwargs):
         return self.api_post(
             view_name=self.password_recovery_view,
             **kwargs
@@ -261,7 +261,7 @@ class UserResetPasswordAPITests(UserTestMixin,
         self.assertIsNone(self.user.reset_token)
         self.assertIsNone(self.user.reset_token_date)
 
-        res = self.api_password_recovey(data={'email': self.user.email})
+        res = self.api_recover_password(data={'email': self.user.email})
         self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED)
 
         self.user.refresh_from_db()
