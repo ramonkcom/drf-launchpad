@@ -51,8 +51,8 @@ class EmailMessage:
 
     def __init__(self, **kwargs):
         self.bcc = []
-        self.cc = []  # pylint: disable=invalid-name
-        self.to = []  # pylint: disable=invalid-name
+        self.cc = []
+        self.to = []
 
         for key, value in kwargs.items():
             if key in ['bcc', 'cc', 'to']:

@@ -39,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return fields
 
-    def validate(self, data):  # pylint: disable=arguments-renamed
+    def validate(self, data):
         data.pop('password', None)
         password_1 = data.pop('password_1', None)
         password_2 = data.pop('password_2', None)

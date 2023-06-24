@@ -140,7 +140,7 @@ class UserRetrieveUpdateAPIView(generics.GenericAPIView):
             return get_object_or_404(queryset, pk=self.request.user.pk)
 
         except (TypeError, ValueError, ValidationError):
-            raise Http404  # pylint: disable=raise-missing-from
+            raise Http404
 
     def get(self, request, *args, **kwargs):
         """Retrieves the authenticated user.

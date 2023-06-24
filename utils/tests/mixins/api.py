@@ -14,7 +14,7 @@ class APITestMixin:
     retrieve_view = ''
     update_view = ''
 
-    def setUp(self):  # pylint: disable=invalid-name
+    def setUp(self):
         self.api_client = self.create_api_client()
 
     def authenticate(self, user=None, api_client=None):
