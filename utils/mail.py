@@ -312,35 +312,35 @@ class PasswordResetEmailMessage(EmailMessage):
         """Returns the HTML version of the verification email content.
         """
 
-        password_update_url = self.get_password_update_url()
+        password_reset_url = self.get_password_reset_url()
         return (
             f'<h1>{self.title_text}</h1>'
             f'<p>{self.main_text}</p>'
-            f'<p><a href="{password_update_url}">{self.button_text}</a></p>'
-            f'<p><em>Direct link: {password_update_url}</em></p>'
+            f'<p><a href="{password_reset_url}">{self.button_text}</a></p>'
+            f'<p><em>Direct link: {password_reset_url}</em></p>'
             f'<p>{self.footer_text}</p>'
         )
 
-    def get_password_update_url(self):
+    def get_password_reset_url(self):
         """Returns the password update URL.
         """
 
         from django.utils.http import urlencode
 
-        confirmation_params = {'id': self.user.id,
-                               'reset_token': self.user.reset_token}
-        return f'{self.password_update_base_url}?{urlencode(confirmation_params)}'
+        reset_params = {'id': self.user.id,
+                        'reset_token': self.user.reset_token}
+        return f'{self.password_update_base_url}?{urlencode(reset_params)}'
 
     def get_plain_text_body(self):
         """Returns the plain text version of the verification email content.
         """
 
-        password_update_url = self.get_password_update_url()
+        password_reset_url = self.get_password_reset_url()
         return (
             f'{self.title_text}\n\n'
             f'{self.main_text}\n\n'
             f'Use the following link to reset your password:\n'
-            f'{password_update_url}\n\n'
+            f'{password_reset_url}\n\n'
             f'{self.footer_text}'
         )
 
@@ -354,7 +354,9 @@ class PasswordResetEmailMessage(EmailMessage):
             from django.urls import reverse
 
             backend_data = {'user_id': self.user.id,
-                            'reset_token': str(self.user.reset_token)}
+                            'reset_token': str(self.user.reset_token),
+                            'password_1': 'NEW_PASSWORD',
+                            'password_2': 'NEW_PASSWORD', }
             backend_url = reverse('core:password-reset')
 
             print('='*80)

@@ -233,9 +233,9 @@ class UserUpdateAPITests(UserTestMixin,
         self.assertEqual(self.user.email, initial_email)
 
 
-class UserResetPasswordAPITests(UserTestMixin,
-                                APITestMixin,
-                                TestCase):
+class PasswordRecoveryAPITests(UserTestMixin,
+                               APITestMixin,
+                               TestCase):
 
     def setUp(self):
         super().setUp()
@@ -249,7 +249,7 @@ class UserResetPasswordAPITests(UserTestMixin,
         )
 
     def api_reset_password(self, **kwargs):
-        return self.api_patch(
+        return self.api_post(
             view_name=self.password_reset_view,
             **kwargs
         )
