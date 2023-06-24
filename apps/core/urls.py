@@ -33,11 +33,11 @@ urlpatterns = [
          EmailUpdateDestroyAPIView.as_view(),
          name='email-update-destroy'),
 
-    path('password/recovery/',
+    path('users/password/recovery/',
          PasswordRecoveryAPIView.as_view(),
          name='password-recovery'),
 
-    path('password/',
+    path('users/password/reset/',
          PasswordResetAPIView.as_view(),
          name='password-reset'),
 

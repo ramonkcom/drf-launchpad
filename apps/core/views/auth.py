@@ -12,9 +12,7 @@ from rest_framework_simplejwt.views import (
 )
 
 
-@extend_schema(
-    tags=['Authentication'],
-)
+@extend_schema(tags=['Token', ])
 @extend_schema_view(
     post=extend_schema(
         responses={
@@ -33,9 +31,7 @@ class TokenObtainAPIView(TokenObtainPairView):
     """
 
 
-@extend_schema(
-    tags=['Authentication'],
-)
+@extend_schema(tags=['Token', ])
 @extend_schema_view(
     post=extend_schema(
         responses={
@@ -54,9 +50,7 @@ class TokenRefreshAPIView(TokenRefreshView):
     """
 
 
-@extend_schema(
-    tags=['Authentication'],
-)
+@extend_schema(tags=['Token', ])
 @extend_schema_view(
     post=extend_schema(
         responses={

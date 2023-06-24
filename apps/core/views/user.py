@@ -12,26 +12,18 @@ from rest_framework import (
     response,
     serializers,
     status,
+    views,
 )
 
 from ..models import User
 from ..serializers import UserSerializer
 
 
-@extend_schema(tags=['User', ])
-class PasswordRecoveryAPIView(generics.GenericAPIView):
+@extend_schema(tags=['Users', ])
+class PasswordRecoveryAPIView(views.APIView):
 
     authentication_classes = []
     permission_classes = [permissions.AllowAny,]
-
-    def get_serializer_class(self):
-        return UserSerializer
-
-    def get_queryset(self):
-        if email := self.request.data.get('email', None):
-            return User.objects.filter(email=email)
-
-        return User.objects.none()
 
     @extend_schema(
         request=inline_serializer(
@@ -49,8 +41,9 @@ class PasswordRecoveryAPIView(generics.GenericAPIView):
             error_msg = {'email': _('This field is required.')}
             return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
-        user = self.get_queryset().first()
+        user = User.objects.filter(email=email).first()
 
+        # NOTE we don't wanna hint whether a user exists or not
         if not user:
             return response.Response(status=status.HTTP_202_ACCEPTED)
 
@@ -62,66 +55,46 @@ class PasswordRecoveryAPIView(generics.GenericAPIView):
         return response.Response(status=status.HTTP_202_ACCEPTED)
 
 
-@extend_schema(tags=['User', ])
-class PasswordResetAPIView(generics.GenericAPIView):
+@extend_schema(tags=['Users', ])
+class PasswordResetAPIView(views.APIView):
 
     authentication_classes = []
     permission_classes = [permissions.AllowAny,]
 
-    def get_serializer_class(self):
-        return UserSerializer
-
-    def get_queryset(self):
-        user_id = self.request.data.get('user_id', None)
-
-        if user_id:
-            return User.objects.filter(pk=user_id)
-
-        return User.objects.none()
-
     @extend_schema(
         request=inline_serializer(
-            name='ResetPasswordSerializer',
+            name='PasswordResetSerializer',
             fields={
+                'user_id': serializers.CharField(required=True),
                 'reset_token': serializers.CharField(required=True),
                 'password_1': serializers.CharField(required=True),
                 'password_2': serializers.CharField(required=True),
             },
         ),
     )
-    def patch(self, request, *args, **kwargs):
-        user_id = self.request.data.get('user_id', None)
-        reset_token = self.request.data.get('reset_token', None)
-        password_1 = self.request.data.get('password_1', None)
-        password_2 = self.request.data.get('password_2', None)
+    def post(self, request, *args, **kwargs):
+        data_keys = ['user_id', 'reset_token', 'password_1', 'password_2']
+        data = {k: v for k, v in request.data.items() if k in data_keys}
 
-        if not user_id:
-            error_msg = {'user_id': _('This field is required.'), }
-            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+        for key in data_keys:
+            value = data.get(key, None)
+            if not value:
+                error_msg = {key: _('This field is required.')}
+                return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
-        if not reset_token:
-            error_msg = {'reset_token': _('This field is required.'), }
-            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
-
-        if not password_1 and not password_2:
-            error_msg = {'password_1': _('This field is required.'),
-                         'password_2': _('This field is required.'), }
-            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
-
-        user = self.get_queryset().first()
+        user_id = data.pop('user_id')
+        user = User.objects.filter(pk=user_id).first()
         if not user:
-            raise Http404
+            error_msg = {'user_id': _('User does not exist.'), }
+            return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
+        reset_token = data.pop('reset_token')
         if not user.check_reset_token(reset_token):
             error_msg = {'reset_token': _(
                 'Request is invalid or has expired.')}
             return response.Response(error_msg, status=status.HTTP_403_FORBIDDEN)
 
-        data = {
-            'password_1': password_1,
-            'password_2': password_2,
-        }
-        serializer = self.get_serializer(
+        serializer = UserSerializer(
             user, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -131,7 +104,7 @@ class PasswordResetAPIView(generics.GenericAPIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class UserCreateAPIView(generics.CreateAPIView):
     """Creates a new user.
     """
@@ -148,7 +121,7 @@ class UserCreateAPIView(generics.CreateAPIView):
         verification_email.send()
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class UserRetrieveUpdateAPIView(generics.GenericAPIView):
     """Retrieves and updates the authenticated user.
     """
