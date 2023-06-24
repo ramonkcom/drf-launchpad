@@ -17,6 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
             'is_superuser',
             'last_login',
             'password',
+            'reset_token',
+            'reset_token_date',
             'user_permissions',
         ]
         read_only_fields = [

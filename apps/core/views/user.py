@@ -71,6 +71,7 @@ class PasswordResetAPIView(views.APIView):
                 'password_2': serializers.CharField(required=True),
             },
         ),
+        responses={200: UserSerializer},
     )
     def post(self, request, *args, **kwargs):
         data_keys = ['user_id', 'reset_token', 'password_1', 'password_2']
