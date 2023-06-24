@@ -18,7 +18,7 @@ from ..models import User
 from ..serializers import UserSerializer
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class PasswordRecoveryAPIView(generics.GenericAPIView):
 
     authentication_classes = []
@@ -62,7 +62,7 @@ class PasswordRecoveryAPIView(generics.GenericAPIView):
         return response.Response(status=status.HTTP_202_ACCEPTED)
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class PasswordResetAPIView(generics.GenericAPIView):
 
     authentication_classes = []
@@ -131,7 +131,7 @@ class PasswordResetAPIView(generics.GenericAPIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class UserCreateAPIView(generics.CreateAPIView):
     """Creates a new user.
     """
@@ -148,7 +148,7 @@ class UserCreateAPIView(generics.CreateAPIView):
         verification_email.send()
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class UserRetrieveUpdateAPIView(generics.GenericAPIView):
     """Retrieves and updates the authenticated user.
     """

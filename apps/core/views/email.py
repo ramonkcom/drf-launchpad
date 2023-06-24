@@ -16,7 +16,7 @@ from ..models import Email
 from ..serializers import EmailSerializer
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class EmailConfirmationAPIView(generics.GenericAPIView):
 
     authentication_classes = []
@@ -61,7 +61,7 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
         return response.Response(data, status=status.HTTP_200_OK)
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class EmailConfirmationRequestAPIView(generics.GenericAPIView):
 
     # NOTE This view does not use DjangoObjectPermissions because
@@ -98,7 +98,7 @@ class EmailConfirmationRequestAPIView(generics.GenericAPIView):
         return response.Response(status=status.HTTP_202_ACCEPTED)
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class EmailCreateAPIView(generics.CreateAPIView):
     """Adds a new email to the authenticated user.
     """
@@ -118,7 +118,7 @@ class EmailCreateAPIView(generics.CreateAPIView):
         verification_email.send()
 
 
-@extend_schema(tags=['User', ])
+@extend_schema(tags=['Users', ])
 class EmailUpdateDestroyAPIView(generics.GenericAPIView):
 
     def get_queryset(self):
