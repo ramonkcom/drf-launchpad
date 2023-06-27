@@ -4,6 +4,8 @@ from ...helpers import model_to_dict
 
 
 class DictFactoryMixin:
+    """Mixin to allow building dictionaries from a model instance.
+    """
 
     @classmethod
     def _filter_fields(cls, instance_dict, include_fields=None, exclude_fields=None):
@@ -31,6 +33,21 @@ class DictFactoryMixin:
 
     @classmethod
     def build_dict(cls, **kwargs):
+        """Build a dictionary from a model instance.
+
+        Args:
+            include_fields (list, optional): List of fields to be included in the
+                dictionary. Defaults to [].
+            exclude_fields (list, optional): List of fields to be excluded from the
+                dictionary. Defaults to [].
+
+        Raises:
+            ValueError: If a field is included and excluded at the same time.
+
+        Returns:
+            dict: Dictionary built from the model instance.
+        """
+
         include_fields = kwargs.pop('include_fields', [])
         exclude_fields = kwargs.pop('exclude_fields', [])
 

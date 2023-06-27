@@ -48,6 +48,9 @@ class UserFactory(DictFactoryMixin,
         family_name=factory.SelfAttribute('..family_name'),
     )
 
+    # NOTE: Although there's a signal to generate the username, we need to
+    # generate it here for when the strategy is 'build' (instead of 'create'),
+    # because the signal is not triggered in that case.
     username = factory.LazyAttribute(build_username)
 
     @classmethod

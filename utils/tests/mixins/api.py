@@ -5,6 +5,8 @@ from rest_framework.test import APIClient
 
 
 class APITestMixin:
+    """Mixin to help in API tests.
+    """
 
     api_client = None
     create_view = ''
@@ -57,11 +59,11 @@ class APITestMixin:
             url_kwargs (dict, optional): The kwargs to be passed to the URL.
             urlconf (str, optional): The URLconf module to use.
 
-        Returns:
-            Response: The API response.
-
         Raises:
             ValueError: If the create view is invalid.
+
+        Returns:
+            Response: The API response.
         """
 
         if not self.create_view:
@@ -107,11 +109,11 @@ class APITestMixin:
             url_kwargs (dict, optional): The kwargs to be passed to the URL.
             urlconf (str, optional): The URLconf module to use.
 
-        Returns:
-            Response: The API response.
-
         Raises:
             ValueError: If the update view is invalid.
+
+        Returns:
+            Response: The API response.
         """
 
         return self.api_delete(self.destroy_view, **kwargs)
@@ -130,11 +132,11 @@ class APITestMixin:
             url_kwargs (dict, optional): The kwargs to be passed to the URL.
             urlconf (str, optional): The URLconf module to use.
 
-        Returns:
-            Response: The API response.
-
         Raises:
             ValueError: If the list view is invalid.
+
+        Returns:
+            Response: The API response.
         """
 
         if not self.list_view:
@@ -203,11 +205,11 @@ class APITestMixin:
             url_kwargs (dict, optional): The kwargs to be passed to the URL.
             urlconf (str, optional): The URLconf module to use.
 
-        Returns:
-            Response: The API response.
-
         Raises:
             ValueError: If the update view is invalid.
+
+        Returns:
+            Response: The API response.
         """
 
         if not self.partial_update_view:
@@ -313,11 +315,11 @@ class APITestMixin:
             url_kwargs (dict, optional): The kwargs to be passed to the URL.
             urlconf (str, optional): The URLconf module to use.
 
-        Returns:
-            Response: The API response.
-
         Raises:
             ValueError: If the retrieve view is invalid.
+
+        Returns:
+            Response: The API response.
         """
 
         if not self.retrieve_view:
@@ -340,11 +342,11 @@ class APITestMixin:
             url_kwargs (dict, optional): The kwargs to be passed to the URL.
             urlconf (str, optional): The URLconf module to use.
 
-        Returns:
-            Response: The API response.
-
         Raises:
             ValueError: If the update view is invalid.
+
+        Returns:
+            Response: The API response.
         """
 
         if not self.update_view:
