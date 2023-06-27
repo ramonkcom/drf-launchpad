@@ -13,6 +13,8 @@ import sys
 
 from dotenv import load_dotenv
 
+from .common import PROJECT_TITLE
+
 load_dotenv()
 
 # ---------------------------------------------------------------------------- #
@@ -41,13 +43,25 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ROOT_URLCONF = 'config.urls'
 
 # ---------------------------------------------------------------------------- #
-# NOTE this is a custom setting to determine if we are in production or not
+# NOTE: This is a custom setting to determine if we are in production or not.
+# TODO: Link documentation for this here.
 
 PRODUCTION = False
 
 # ---------------------------------------------------------------------------- #
-# NOTE this is a custom setting to determine if we are running tests or not
+# NOTE: This is a custom setting to determine if we are running tests or not.
+# TODO: Link documentation for this here.
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
+# ---------------------------------------------------------------------------- #
+# NOTE: This is a custom setting for the email confirmation functionality.
+# TODO: Link documentation for this here.
+
+EMAIL_CONFIRMATION = {
+    'CODE_TIMEOUT': 60 * 60 * 24,
+    'DEFAULT_FROM': ('noreply@localhost', PROJECT_TITLE),
+    'SEND_CALLBACK': '',
+}
 
 # ---------------------------------------------------------------------------- #

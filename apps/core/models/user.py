@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
@@ -47,8 +48,6 @@ class User(AbstractBaseUser,
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-
-    RESET_TOKEN_TIMEOUT = 60 * 60 * 24
 
     # ---------------------------------- FIELDS ---------------------------------- #
 
@@ -263,7 +262,7 @@ class User(AbstractBaseUser,
             return False
 
         expiration_date = self.reset_token_date + timezone.timedelta(
-            seconds=self.RESET_TOKEN_TIMEOUT
+            seconds=settings.PASSWORD_RESET['TOKEN_TIMEOUT']
         )
 
         return all([

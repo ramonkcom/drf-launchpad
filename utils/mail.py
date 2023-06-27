@@ -14,6 +14,9 @@ class EmailMessage:
             containing the email address and the name of the recipient.
         footer_text (str): the text to be used as the footer.
         main_text (str): the text to be used as the body.
+        sender (tuple, optional): the sender as a tuple containing the
+            email address and the name of the sender. Defaults to the value of
+            `settings.DEFAULT_FROM_EMAIL`.
         subject (str): the subject of the email.
         title_text (str): the text to be used as the title.
         to (list[tuple(str, str)]): the list of recipients as tuples,
@@ -21,9 +24,10 @@ class EmailMessage:
     """
 
     bcc = None
-    main_text = None
     cc = None
     footer_text = None
+    main_text = None
+    sender = None
     subject = None
     title_text = None
     to = None
@@ -54,9 +58,28 @@ class EmailMessage:
         self.cc = []
         self.to = []
 
+        if 'sender' not in kwargs:
+            kwargs['sender'] = settings.EMAIL_CONFIRMATION.get(
+                'DEFAULT_FROM', None)
+
         for key, value in kwargs.items():
             if key in ['bcc', 'cc', 'to']:
                 self.validate_recipients(key, value)
+                setattr(self, key, value)
+
+            elif key == 'sender':
+                if not isinstance(kwargs['sender'], tuple):
+                    error_msg = _('`sender` must be a tuple '
+                                  '(e.g. ("noreply@example.com", "Sender"))')
+                    raise ValueError(error_msg)
+
+                email_regex = r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                email_address = str(kwargs['sender'][0])
+                if not re.match(email_regex, email_address):
+                    error_msg = _('%(email)s is not a valid email address.') % {
+                        'email': email_address}
+                    raise ValueError(error_msg)
+
                 setattr(self, key, value)
 
             elif hasattr(self, key):
@@ -81,6 +104,22 @@ class EmailMessage:
             f'{self.main_text}\n\n'
             f'{self.footer_text}'
         )
+
+    def get_send_callback(self, callback_name):
+        """Returns the callback function to send the email.
+
+        Args:
+            callback_name (str): the name of the callback function.
+
+        Returns:
+            function: the callback function.
+        """
+
+        import importlib
+
+        module_name, function_name = callback_name.rsplit('.', 1)
+        module = importlib.import_module(module_name)
+        return getattr(module, function_name)
 
     def print(self):
         """Prints the email to the console.
@@ -156,7 +195,8 @@ class VerificationEmailMessage(EmailMessage):
         super_kwargs = {
             'to': [(self.email.address, self.email.user.full_name),], }
 
-        hours_to_expire = int(Email.CONFIRMATION_CODE_TIMEOUT / 3600)
+        hours_to_expire = int(
+            settings.EMAIL_CONFIRMATION['CODE_TIMEOUT'] / 3600)
 
         defaults = {
             'confirmation_base_url': 'https://FRONTEND_URL/CONFIRM_EMAIL_PATH/',
@@ -243,6 +283,22 @@ class VerificationEmailMessage(EmailMessage):
             print(f'Backend Payload Data: {backend_data}')
             print('='*80, '\n')
 
+    def send(self):
+        if ('SEND_CALLBACK' not in settings.EMAIL_CONFIRMATION
+                or not settings.EMAIL_CONFIRMATION['SEND_CALLBACK']):
+            return super().send()
+
+        callback_name = settings.EMAIL_CONFIRMATION['SEND_CALLBACK']
+        send_confirmation_email = self.get_send_callback(callback_name)
+        return send_confirmation_email(subject=self.subject,
+                                       plain_text=self.get_plain_text_body(),
+                                       html=self.get_html_body(),
+                                       sender=self.sender,
+                                       to=self.to,
+                                       cc=self.cc,
+                                       bcc=self.bcc,
+                                       email_instance=self.email)
+
 
 class PasswordResetEmailMessage(EmailMessage):
     """Utility class to help sending password reset emails.
@@ -282,7 +338,8 @@ class PasswordResetEmailMessage(EmailMessage):
         super_kwargs = {
             'to': [(self.user.email, self.user.full_name),], }
 
-        hours_to_expire = int(User.RESET_TOKEN_TIMEOUT / 3600)
+        hours_to_expire = int(
+            settings.PASSWORD_RESET['TOKEN_TIMEOUT'] / 3600)
 
         defaults = {
             'password_update_base_url': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
@@ -367,3 +424,19 @@ class PasswordResetEmailMessage(EmailMessage):
             print(f'Backend URL: {backend_url}')
             print(f'Backend Payload Data: {backend_data}')
             print('='*80, '\n')
+
+    def send(self):
+        if ('SEND_CALLBACK' not in settings.PASSWORD_RESET
+                or not settings.PASSWORD_RESET['SEND_CALLBACK']):
+            return super().send()
+
+        callback_name = settings.PASSWORD_RESET['SEND_CALLBACK']
+        send_recovery_email = self.get_send_callback(callback_name)
+        return send_recovery_email(subject=self.subject,
+                                   plain_text=self.get_plain_text_body(),
+                                   html=self.get_html_body(),
+                                   sender=self.sender,
+                                   to=self.to,
+                                   cc=self.cc,
+                                   bcc=self.bcc,
+                                   user_instance=self.user)
