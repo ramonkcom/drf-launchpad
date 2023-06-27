@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -32,8 +33,6 @@ class Email(models.Model):
         DEFAULT_SIGNUP = 'DEFAULT_SIGNUP', _('Default Sign Up')
         ADMIN = 'ADMIN', _('Admin')
         USER_INPUT = 'USER_INPUT', _('User Input')
-
-    CONFIRMATION_CODE_TIMEOUT = 60 * 60 * 24
 
     # ---------------------------------- FIELDS ---------------------------------- #
 
@@ -139,7 +138,7 @@ class Email(models.Model):
             return False
 
         expiration_date = self.confirmation_code_date + timezone.timedelta(
-            seconds=self.CONFIRMATION_CODE_TIMEOUT
+            seconds=settings.EMAIL_CONFIRMATION['CODE_TIMEOUT']
         )
 
         return all([

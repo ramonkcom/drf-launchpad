@@ -21,9 +21,9 @@ class EmailMessage:
     """
 
     bcc = None
-    main_text = None
     cc = None
     footer_text = None
+    main_text = None
     subject = None
     title_text = None
     to = None
@@ -156,7 +156,8 @@ class VerificationEmailMessage(EmailMessage):
         super_kwargs = {
             'to': [(self.email.address, self.email.user.full_name),], }
 
-        hours_to_expire = int(Email.CONFIRMATION_CODE_TIMEOUT / 3600)
+        hours_to_expire = int(
+            settings.EMAIL_CONFIRMATION['CODE_TIMEOUT'] / 3600)
 
         defaults = {
             'confirmation_base_url': 'https://FRONTEND_URL/CONFIRM_EMAIL_PATH/',
