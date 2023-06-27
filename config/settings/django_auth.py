@@ -44,6 +44,7 @@ AUTHENTICATION_BACKENDS = (
 # TODO: Link documentation for this here.
 
 PASSWORD_RESET = {
+    'SEND_CALLBACK': '',
     'TOKEN_TIMEOUT': 60 * 60 * 24,
 }
 

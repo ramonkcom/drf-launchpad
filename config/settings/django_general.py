@@ -61,6 +61,7 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 EMAIL_CONFIRMATION = {
     'CODE_TIMEOUT': 60 * 60 * 24,
     'DEFAULT_FROM': ('noreply@localhost', PROJECT_TITLE),
+    'SEND_CALLBACK': '',
 }
 
 # ---------------------------------------------------------------------------- #

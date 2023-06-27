@@ -105,6 +105,22 @@ class EmailMessage:
             f'{self.footer_text}'
         )
 
+    def get_send_callback(self, callback_name):
+        """Returns the callback function to send the email.
+
+        Args:
+            callback_name (str): the name of the callback function.
+
+        Returns:
+            function: the callback function.
+        """
+
+        import importlib
+
+        module_name, function_name = callback_name.rsplit('.', 1)
+        module = importlib.import_module(module_name)
+        return getattr(module, function_name)
+
     def print(self):
         """Prints the email to the console.
         """
@@ -267,6 +283,22 @@ class VerificationEmailMessage(EmailMessage):
             print(f'Backend Payload Data: {backend_data}')
             print('='*80, '\n')
 
+    def send(self):
+        if ('SEND_CALLBACK' not in settings.EMAIL_CONFIRMATION
+                or not settings.EMAIL_CONFIRMATION['SEND_CALLBACK']):
+            return super().send()
+
+        callback_name = settings.EMAIL_CONFIRMATION['SEND_CALLBACK']
+        send_confirmation_email = self.get_send_callback(callback_name)
+        return send_confirmation_email(subject=self.subject,
+                                       plain_text=self.get_plain_text_body(),
+                                       html=self.get_html_body(),
+                                       sender=self.sender,
+                                       to=self.to,
+                                       cc=self.cc,
+                                       bcc=self.bcc,
+                                       email_instance=self.email)
+
 
 class PasswordResetEmailMessage(EmailMessage):
     """Utility class to help sending password reset emails.
@@ -392,3 +424,19 @@ class PasswordResetEmailMessage(EmailMessage):
             print(f'Backend URL: {backend_url}')
             print(f'Backend Payload Data: {backend_data}')
             print('='*80, '\n')
+
+    def send(self):
+        if ('SEND_CALLBACK' not in settings.PASSWORD_RESET
+                or not settings.PASSWORD_RESET['SEND_CALLBACK']):
+            return super().send()
+
+        callback_name = settings.PASSWORD_RESET['SEND_CALLBACK']
+        send_recovery_email = self.get_send_callback(callback_name)
+        return send_recovery_email(subject=self.subject,
+                                   plain_text=self.get_plain_text_body(),
+                                   html=self.get_html_body(),
+                                   sender=self.sender,
+                                   to=self.to,
+                                   cc=self.cc,
+                                   bcc=self.bcc,
+                                   user_instance=self.user)
