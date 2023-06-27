@@ -3,9 +3,8 @@ from datetime import datetime
 from django.conf import settings
 from django.db.models import signals
 from django.dispatch import receiver
-from guardian.shortcuts import assign_perm
 
-from utils.permissions import assign_basic_permissions
+from utils.permissions import assign_initial_permissions
 
 from ..models import (
     Email,
@@ -62,16 +61,14 @@ def user_initial_setup(sender, instance, created, **kwargs):
     profile_kwargs = getattr(user, '_profile_attrs', {})
 
     if created:
-        Email.objects.create(user=user,
-                             address=user.email)
-
         if not getattr(sender, '_skip_profile_creation', False):
             profile_kwargs['user'] = user
             Profile.objects.create(**profile_kwargs)
 
-        assign_basic_permissions(user)
-        assign_perm("view_user", user, user)
-        assign_perm("change_user", user, user)
+        assign_initial_permissions(user)
+
+        Email.objects.create(user=user,
+                             address=user.email)
 
     else:
         if profile_kwargs:
