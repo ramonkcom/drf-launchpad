@@ -14,6 +14,9 @@ class EmailMessage:
             containing the email address and the name of the recipient.
         footer_text (str): the text to be used as the footer.
         main_text (str): the text to be used as the body.
+        sender (tuple, optional): the sender as a tuple containing the
+            email address and the name of the sender. Defaults to the value of
+            `settings.DEFAULT_FROM_EMAIL`.
         subject (str): the subject of the email.
         title_text (str): the text to be used as the title.
         to (list[tuple(str, str)]): the list of recipients as tuples,
@@ -24,6 +27,7 @@ class EmailMessage:
     cc = None
     footer_text = None
     main_text = None
+    sender = None
     subject = None
     title_text = None
     to = None
@@ -54,9 +58,28 @@ class EmailMessage:
         self.cc = []
         self.to = []
 
+        if 'sender' not in kwargs:
+            kwargs['sender'] = settings.EMAIL_CONFIRMATION.get(
+                'DEFAULT_FROM', None)
+
         for key, value in kwargs.items():
             if key in ['bcc', 'cc', 'to']:
                 self.validate_recipients(key, value)
+                setattr(self, key, value)
+
+            elif key == 'sender':
+                if not isinstance(kwargs['sender'], tuple):
+                    error_msg = _('`sender` must be a tuple '
+                                  '(e.g. ("noreply@example.com", "Sender"))')
+                    raise ValueError(error_msg)
+
+                email_regex = r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                email_address = str(kwargs['sender'][0])
+                if not re.match(email_regex, email_address):
+                    error_msg = _('%(email)s is not a valid email address.') % {
+                        'email': email_address}
+                    raise ValueError(error_msg)
+
                 setattr(self, key, value)
 
             elif hasattr(self, key):
