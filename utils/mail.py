@@ -282,7 +282,8 @@ class PasswordResetEmailMessage(EmailMessage):
         super_kwargs = {
             'to': [(self.user.email, self.user.full_name),], }
 
-        hours_to_expire = int(User.RESET_TOKEN_TIMEOUT / 3600)
+        hours_to_expire = int(
+            settings.PASSWORD_RESET['TOKEN_TIMEOUT'] / 3600)
 
         defaults = {
             'password_update_base_url': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
