@@ -13,8 +13,6 @@ import sys
 
 from dotenv import load_dotenv
 
-from .common import PROJECT_TITLE
-
 load_dotenv()
 
 # ---------------------------------------------------------------------------- #
@@ -53,15 +51,5 @@ PRODUCTION = False
 # TODO: Link documentation for this here.
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
-
-# ---------------------------------------------------------------------------- #
-# NOTE: This is a custom setting for the email confirmation functionality.
-# TODO: Link documentation for this here.
-
-EMAIL_CONFIRMATION = {
-    'CODE_TIMEOUT': 60 * 60 * 24,
-    'DEFAULT_FROM': ('noreply@localhost', PROJECT_TITLE),
-    'SEND_CALLBACK': '',
-}
 
 # ---------------------------------------------------------------------------- #

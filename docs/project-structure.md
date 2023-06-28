@@ -41,6 +41,7 @@ config
 │   ├── django_apps.py
 │   ├── django_auth.py
 │   ├── django_db.py
+│   ├── django_email.py
 │   ├── django_general.py
 │   ├── django_i18n.py
 │   ├── django_middleware.py
@@ -91,6 +92,7 @@ from .django_middleware import *
 from .django_db import *
 from .django_auth import *
 from .django_static import *
+from .django_email import *
 from .django_i18n import *
 
 # THIRD-PARTY SETTINGS
