@@ -22,9 +22,6 @@ EMAIL_CONFIRMATION = {
     # The time period in second the user can use the code to confirm the email
     'CODE_TIMEOUT': 60 * 60 * 24,
 
-    # The sender in the email confirmation
-    'DEFAULT_FROM': ('noreply@localhost', PROJECT_TITLE),
-
     # The callback to send the email confirmation
     'SEND_CALLBACK': '',
 }
