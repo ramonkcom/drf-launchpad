@@ -48,7 +48,7 @@ EMAIL_USE_SSL = True
 
 # ---------------------------------------------------------------------------- #
 # NOTE: This is a custom setting for the email confirmation functionality.
-# TODO: Link documentation for this here.
+# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#email_confirmation
 
 EMAIL_CONFIRMATION = {
     'CODE_TIMEOUT': 60 * 60 * 24,
