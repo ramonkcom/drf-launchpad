@@ -25,6 +25,23 @@ def debug_model_instance(instance):
     print('='*80)
 
 
+def load_entity(path):
+    """Loads a module entity from a string path.
+
+    Args:
+        path (str): A string path to the entity (e.g. 'utils.load_function').
+
+    Returns:
+        any: The entity at the given path.
+    """
+
+    import importlib
+
+    module_path, entity_name = path.rsplit('.', 1)
+    module = importlib.import_module(module_path)
+    return getattr(module, entity_name)
+
+
 def model_to_dict(instance):
     """Returns a dict representation of a model instance.
 
