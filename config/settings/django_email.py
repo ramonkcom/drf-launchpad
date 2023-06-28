@@ -51,6 +51,7 @@ EMAIL_USE_SSL = True
 # https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#email_confirmation
 
 EMAIL_CONFIRMATION = {
+    'FRONTEND_BASE_URL': 'https://FRONTEND_URL/CONFIRM_EMAIL_PATH/',
     'CODE_TIMEOUT': 60 * 60 * 24,
     'DEFAULT_FROM': ('noreply@localhost', PROJECT_TITLE),
     'SEND_CALLBACK': '',

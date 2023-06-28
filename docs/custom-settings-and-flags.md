@@ -16,6 +16,9 @@ The `EMAIL_CONFIRMATION` setting is located in the `config/settings/django_gener
 
 ```python
 EMAIL_CONFIRMATION = {
+    # The frontend base URL to confirm the email
+    'FRONTEND_BASE_URL': 'https://FRONTEND_URL/CONFIRM_EMAIL_PATH/',
+
     # The time period in second the user can use the code to confirm the email
     'CODE_TIMEOUT': 60 * 60 * 24,
 
@@ -37,6 +40,9 @@ The `PASSWORD_RESET` setting is located in the `config/settings/django_auth.py` 
 
 ```python
 PASSWORD_RESET = {
+    # The frontend base URL to reset the password
+    'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
+
     # The callback to send the password recovery email
     'SEND_CALLBACK': '',
 

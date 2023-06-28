@@ -44,6 +44,7 @@ AUTHENTICATION_BACKENDS = (
 # TODO: Link documentation for this here.
 
 PASSWORD_RESET = {
+    'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
     'SEND_CALLBACK': '',
     'TOKEN_TIMEOUT': 60 * 60 * 24,
 }
