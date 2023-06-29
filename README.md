@@ -91,7 +91,7 @@ Of course, you don't need to read all the sections from top to bottom. They are 
 - [Email sending](./docs/email-sending.md)
 - [Custom settings and flags](./docs/custom-settings-and-flags.md)
   - [`EMAIL_CONFIRMATION`](./docs/custom-settings-and-flags.md#email_confirmation)
-  - [`PASSWORD_RESET`](./docs/custom-settings-and-flags.md#password_reset)
+  - [`PASSWORD_RECOVERY`](./docs/custom-settings-and-flags.md#password_recovery)
   - [`TESTING`](./docs/custom-settings-and-flags.md#testing)
   - [`PRODUCTION`](./docs/custom-settings-and-flags.md#production)
 - [Changelog](./CHANGELOG.md)

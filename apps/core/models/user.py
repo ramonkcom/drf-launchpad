@@ -262,7 +262,7 @@ class User(AbstractBaseUser,
             return False
 
         expiration_date = self.reset_token_date + timezone.timedelta(
-            seconds=settings.PASSWORD_RESET.get('TOKEN_TIMEOUT', (60*60*24))
+            seconds=settings.PASSWORD_RECOVERY.get('TOKEN_TIMEOUT', (60*60*24))
         )
 
         return all([

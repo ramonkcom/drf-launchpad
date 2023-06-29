@@ -40,9 +40,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # ---------------------------------------------------------------------------- #
-# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#password_reset
+# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#password_recovery
 
-PASSWORD_RESET = {
+PASSWORD_RECOVERY = {
     'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
     'SEND_EMAIL_CALLBACK': '',
     'SEND_EMAIL_IN_DEV': False,

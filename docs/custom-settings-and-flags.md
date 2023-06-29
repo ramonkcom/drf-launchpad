@@ -4,7 +4,7 @@
 
 # Custom settings and flags
 
-There are two custom settings in DRF Launchpad: [`EMAIL_CONFIRMATION`](#email_confirmation), which is used to configure the email confirmation process, and [`PASSWORD_RESET`](#password_reset), which is used to configure the password recovery process.
+There are two custom settings in DRF Launchpad: [`EMAIL_CONFIRMATION`](#email_confirmation), which is used to configure the email confirmation process, and [`PASSWORD_RECOVERY`](#password_recovery), which is used to configure the password recovery process.
 
 There is also two flags: [`TESTING`](#testing), which is automatically set to `True` when running tests, and [`PRODUCTION`](#production), which you can set to `True` to know when you're running in production.
 
@@ -34,12 +34,12 @@ You can read more about the `SEND_EMAIL_CALLBACK` setting in the [email sending 
 
 ---
 
-## `PASSWORD_RESET`
+## `PASSWORD_RECOVERY`
 
-The `PASSWORD_RESET` setting is located in the `config/settings/django_auth.py` file. It is used to configure the password recovery process.
+The `PASSWORD_RECOVERY` setting is located in the `config/settings/django_auth.py` file. It is used to configure the password recovery process.
 
 ```python
-PASSWORD_RESET = {
+PASSWORD_RECOVERY = {
     # The frontend base URL to reset the password
     'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
 

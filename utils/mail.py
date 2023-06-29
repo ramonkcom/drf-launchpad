@@ -339,7 +339,7 @@ class PasswordResetEmailMessage(EmailMessage):
             'to': [(self.user.email, self.user.full_name),], }
 
         hours_to_expire = int(
-            settings.PASSWORD_RESET['TOKEN_TIMEOUT'] / 3600)
+            settings.PASSWORD_RECOVERY['TOKEN_TIMEOUT'] / 3600)
 
         defaults = {
             'password_update_base_url': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
@@ -426,11 +426,11 @@ class PasswordResetEmailMessage(EmailMessage):
             print('='*80, '\n')
 
     def send(self):
-        if ('SEND_EMAIL_CALLBACK' not in settings.PASSWORD_RESET
-                or not settings.PASSWORD_RESET['SEND_EMAIL_CALLBACK']):
+        if ('SEND_EMAIL_CALLBACK' not in settings.PASSWORD_RECOVERY
+                or not settings.PASSWORD_RECOVERY['SEND_EMAIL_CALLBACK']):
             return super().send()
 
-        callback_name = settings.PASSWORD_RESET['SEND_EMAIL_CALLBACK']
+        callback_name = settings.PASSWORD_RECOVERY['SEND_EMAIL_CALLBACK']
         send_recovery_email = self.get_send_callback(callback_name)
         return send_recovery_email(subject=self.subject,
                                    plain_text=self.get_plain_text_body(),

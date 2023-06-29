@@ -24,7 +24,7 @@ DRF Lauchpad is a boilerplate for **quickly starting new RESTful API projects us
 - [Email sending](./email-sending.md)
 - [Custom settings and flags](./custom-settings-and-flags.md)
   - [`EMAIL_CONFIRMATION`](./custom-settings-and-flags.md#email_confirmation)
-  - [`PASSWORD_RESET`](./custom-settings-and-flags.md#password_reset)
+  - [`PASSWORD_RECOVERY`](./custom-settings-and-flags.md#password_recovery)
   - [`TESTING`](./custom-settings-and-flags.md#testing)
   - [`PRODUCTION`](./custom-settings-and-flags.md#production)
 - [Changelog](../CHANGELOG.md)
