@@ -40,8 +40,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # ---------------------------------------------------------------------------- #
-# NOTE: This is a custom setting for the reset password token timeout.
-# TODO: Link documentation for this here.
+# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#password_reset
 
 PASSWORD_RESET = {
     'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',

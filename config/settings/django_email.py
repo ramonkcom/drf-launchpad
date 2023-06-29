@@ -52,7 +52,6 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@localhost')
 
 # ---------------------------------------------------------------------------- #
-# NOTE: This is a custom setting for the email confirmation functionality.
 # https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#email_confirmation
 
 EMAIL_CONFIRMATION = {

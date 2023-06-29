@@ -41,14 +41,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ROOT_URLCONF = 'config.urls'
 
 # ---------------------------------------------------------------------------- #
-# NOTE: This is a custom setting to determine if we are in production or not.
-# TODO: Link documentation for this here.
+# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#production
 
 PRODUCTION = False
 
 # ---------------------------------------------------------------------------- #
-# NOTE: This is a custom setting to determine if we are running tests or not.
-# TODO: Link documentation for this here.
+# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#testing
 
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
