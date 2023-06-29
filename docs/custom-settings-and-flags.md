@@ -24,6 +24,9 @@ EMAIL_CONFIRMATION = {
 
     # The callback to send the email confirmation
     'SEND_CALLBACK': '',
+
+    # Whether to send the email even in development
+    'SEND_EMAIL_IN_DEV': False,
 }
 ```
 
@@ -42,6 +45,9 @@ PASSWORD_RESET = {
 
     # The callback to send the password recovery email
     'SEND_CALLBACK': '',
+
+    # Whether to send the recovery email even in development
+    'SEND_EMAIL_IN_DEV': False,
 
     # The time period in second the user can use the token to recover the password
     'TOKEN_TIMEOUT': 60 * 60 * 24,
