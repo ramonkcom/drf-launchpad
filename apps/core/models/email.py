@@ -146,7 +146,7 @@ class Email(models.Model):
             timezone.now() < expiration_date
         ])
 
-    def get_verification_email(self, **kwargs):
+    def get_verification_email_message(self, **kwargs):
         """Gets the verification email.
 
         Returns:

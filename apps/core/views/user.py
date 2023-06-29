@@ -118,8 +118,9 @@ class UserCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        verification_email = user.primary_email.get_verification_email()
-        verification_email.send()
+        email = user.primary_email
+        verification_email_msg = email.get_verification_email_message()
+        verification_email_msg.send()
 
 
 @extend_schema(tags=['Users', ])
