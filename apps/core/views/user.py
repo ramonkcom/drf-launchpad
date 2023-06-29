@@ -49,8 +49,8 @@ class PasswordRecoveryAPIView(views.APIView):
 
         user.generate_reset_token(overwrite=False, save=True)
 
-        reset_email = user.get_password_reset_email()
-        reset_email.send()
+        recovery_email_msg = user.get_password_recovery_email_message()
+        recovery_email_msg.send()
 
         return response.Response(status=status.HTTP_202_ACCEPTED)
 
@@ -118,8 +118,9 @@ class UserCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        verification_email = user.primary_email.get_verification_email()
-        verification_email.send()
+        email = user.primary_email
+        verification_email_msg = email.get_verification_email_message()
+        verification_email_msg.send()
 
 
 @extend_schema(tags=['Users', ])
