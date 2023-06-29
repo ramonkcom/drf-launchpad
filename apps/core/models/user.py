@@ -290,7 +290,7 @@ class User(AbstractBaseUser,
 
         return self.reset_token
 
-    def get_password_reset_email(self, **kwargs):
+    def get_password_recovery_email_message(self, **kwargs):
         """Gets the password reset email.
 
         Returns:

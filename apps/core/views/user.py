@@ -49,8 +49,8 @@ class PasswordRecoveryAPIView(views.APIView):
 
         user.generate_reset_token(overwrite=False, save=True)
 
-        reset_email = user.get_password_reset_email()
-        reset_email.send()
+        recovery_email_msg = user.get_password_recovery_email_message()
+        recovery_email_msg.send()
 
         return response.Response(status=status.HTTP_202_ACCEPTED)
 

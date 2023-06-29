@@ -74,7 +74,7 @@ class PasswordRecoveryAPIView(views.APIView):
     def post(self, request, *args, **kwargs):
         # (...)
 
-        reset_email = user.get_password_reset_email(
+        reset_email = user.get_password_recovery_email_message(
             subject='CUSTOM SUBJECT',
             title_text='CUSTOM TITLE',
             main_text='CUSTOM MAIN TEXT',
