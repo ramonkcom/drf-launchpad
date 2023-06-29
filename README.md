@@ -61,12 +61,13 @@ _¹ These endpoints will send emails to the user, so you have to **configure the
 
 ## Roadmap:
 
-The following features are planned for the next releases:
+The following features are planned for the next steps:
 
-- [x] Use Django native email functionality in the architecture
-- [ ] Include Brazilian Portuguese translations
-- [ ] Add authentication via Google, Facebook, Twitter and Github
-- [ ] Rewrite the documentation using [MkDocs](https://www.mkdocs.org/) or [Sphinx](https://www.sphinx-doc.org/)
+- Authentication via Google
+- Authentication via Facebook
+- Authentication via Twitter
+- Authentication via Github
+- Documentation using [MkDocs](https://www.mkdocs.org/) or [Sphinx](https://www.sphinx-doc.org/)
 
 ---
 
