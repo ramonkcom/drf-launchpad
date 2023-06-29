@@ -13,10 +13,10 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.mail import PasswordResetEmailMessage
 
-from .profile import Profile
+from ..mail import PasswordRecoveryEmailMessage
 from ..managers import UserManager
+from .profile import Profile
 
 
 class User(AbstractBaseUser,
@@ -262,7 +262,7 @@ class User(AbstractBaseUser,
             return False
 
         expiration_date = self.reset_token_date + timezone.timedelta(
-            seconds=settings.PASSWORD_RESET['TOKEN_TIMEOUT']
+            seconds=settings.PASSWORD_RECOVERY.get('TOKEN_TIMEOUT', (60*60*24))
         )
 
         return all([
@@ -290,7 +290,7 @@ class User(AbstractBaseUser,
 
         return self.reset_token
 
-    def get_password_reset_email(self, **kwargs):
+    def get_password_recovery_email_message(self, **kwargs):
         """Gets the password reset email.
 
         Returns:
@@ -302,4 +302,4 @@ class User(AbstractBaseUser,
         }
         message_kwargs.update(kwargs)
 
-        return PasswordResetEmailMessage(**message_kwargs)
+        return PasswordRecoveryEmailMessage(**message_kwargs)

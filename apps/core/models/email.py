@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.mail import VerificationEmailMessage
+from ..mail import VerificationEmailMessage
 
 
 class Email(models.Model):
@@ -138,7 +138,7 @@ class Email(models.Model):
             return False
 
         expiration_date = self.confirmation_code_date + timezone.timedelta(
-            seconds=settings.EMAIL_CONFIRMATION['CODE_TIMEOUT']
+            seconds=settings.EMAIL_CONFIRMATION.get('CODE_TIMEOUT', (60*60*24))
         )
 
         return all([
@@ -146,7 +146,7 @@ class Email(models.Model):
             timezone.now() < expiration_date
         ])
 
-    def get_verification_email(self, **kwargs):
+    def get_verification_email_message(self, **kwargs):
         """Gets the verification email.
 
         Returns:
@@ -154,7 +154,7 @@ class Email(models.Model):
         """
 
         message_kwargs = {
-            'email': self
+            'email_to_verify': self
         }
         message_kwargs.update(kwargs)
 

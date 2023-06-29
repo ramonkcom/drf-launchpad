@@ -4,119 +4,108 @@
 
 # Email sending
 
-In order for everything to work as designed, you need to set up an email sending service for sending email confirmation and password recovery emails.
+The default behavior of the system is to send the emails using the Django mail system with a preset text message. However, you can customize both the email sending method with the service of your choice and/or the text of the email message.
 
-The way things currently work is that when the user is created or adds a new email address to his/her account, the system uses a `VerificationEmailMessage` instance to mount the email message and send it to the user. The same happens when the user requests a password reset, but in this case a `PasswordResetEmailMessage` instance will be used.
+When a new user is created or adds a new email address to his/her account, the system creates an instance of [`VerificationEmailMessage`](https://github.com/ramonkcom/drf-launchpad/blob/main/apps/core/mail.py), which is a subclass of [`django.core.mail.EmailMessage`](https://docs.djangoproject.com/en/dev/topics/email/#the-emailmessage-class), and uses it to send the email to the user. The same happens when the user requests a password reset, but in this case an instance of [`PasswordRecoceryEmailMessage`](https://github.com/ramonkcom/drf-launchpad/blob/main/apps/core/mail.py), also a subclass of [`EmailMessage`](https://docs.djangoproject.com/en/dev/topics/email/#the-emailmessage-class), is used.
 
-Both classes live in `utils/mail.py` and share a lot of similarities, as they inherit from the same base class (`EmailMessage`). The main differences between them are in the `get_html_body` and `get_plain_text_body` methods, which are responsible for generating the HTML and plain text versions of the email message.
-
-There are a few ways you can plug your email sending service into this classes. The most straightforward way is to customize the `get_html_body`, `get_plain_text_body` and `send` methods in these classes. But you can also avoid touching these classes by creating your own callbacks and configuring them in the settings.
-
-We'll go through both approaches in the following sections.
+If you want to customize the email sending method, you can do so by creating your own email sending functions and configuring them in the settings. If you want to customize the text of the email message, you can do so by tweaking the `get_html_body` and `get_plain_text_body` methods of the email sending classes. More on that below.
 
 ---
 
-## Customizing the email sending classes
+## Configuring Django mail system
 
-If you opt to customize the email sending classes, the only required step is to implement your own version of the `send` method with your email sending service of choice. The default implementation does not try to send emails:
+If you're fine with the default behavior, you just need to configure the Django mail system in the settings. For instance, if you want to use Gmail, you can do so by adding the following to your `.env` file:
+
+```bash
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=465
+EMAIL_HOST_USER="your.email@gmail.com"
+EMAIL_HOST_PASSWORD="YOUR_PASSWORD"
+DEFAULT_FROM_EMAIL="'Your Name' <your.email@gmail.com>"
+```
+
+If you're using PORT 465, make sure that `EMAIL_USE_SSL` is set to `True` in settings:
 
 ```python
-
-class EmailMessage:
-
-    def send(self):
-        """Sends the email.
-        """
-
-        import warnings
-
-        if settings.TESTING:
-            return
-
-        if settings.DEBUG:
-            return self.print()
-
-        if settings.PRODUCTION:
-            # Plug the code to send email confirmation here.
-            error_msg = _('You must provide a `send` implementation.')
-            raise NotImplementedError(error_msg)
-
-        else:
-            warn_msg = str(_('Notice: `send` not implemented.'))
-            warnings.warn(warn_msg)
-
-    def print(self):
-        """Prints the email to the console.
-        """
-
-        def format_recipients(recipients):
-            return ', '.join([f'{name} <{email}>' for email, name in recipients])
-
-        print('\n\n', '='*80, sep='')
-        print(f'SUBJECT: {self.subject}')
-        print(f'TO: {format_recipients(self.to)}')
-        print(f'CC: {format_recipients(self.cc)}')
-        print(f'BCC: {format_recipients(self.bcc)}')
-        print('-'*80)
-        print(self.get_plain_text_body())
-        print('='*80, '\n')
-
+# config/settings/django_email.py
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False # this have to be False if you're using SSL
 ```
+
+And if you want to send emails even in development, you should also set the `SEND_EMAIL_IN_DEV` to `True` in settings:
+
+```python
+EMAIL_CONFIRMATION = {
+    # (...)
+    'SEND_EMAIL_IN_DEV': True,
+}
+```
+
+---
+
+## Customizing the email content
 
 If you want to change the text or the formatting of the email message, you can override the `get_html_body` and `get_plain_text_body` methods on the adequate class.
 
-But if just want to change the text, you can do so directly in the views (`UserCreateAPIView`, `EmailConfirmationAPIView`, `PasswordRecoveryAPIView`). For instance:
+For instance, if you want to change the text of the email sent to the user when he/she creates a new account, you can do so by overriding the `get_html_body` and `get_plain_text_body` methods of the [`VerificationEmailMessage`](https://github.com/ramonkcom/drf-launchpad/blob/main/apps/core/mail.py) class:
 
 ```python
-class PasswordRecoveryAPIView(views.APIView):
-    # (...)
 
-    def post(self, request, *args, **kwargs):
-        # (...)
-
-        reset_email = user.get_password_reset_email(
-            subject='CUSTOM SUBJECT',
-            title_text='CUSTOM TITLE',
-            main_text='CUSTOM MAIN TEXT',
-            button_text='CUSTOM BUTTON',
-            footer_text='CUSTOM FOOTER'
+class VerificationEmailMessage:
+    def get_body(self):
+        return (
+            'YOUR CONTENT HERE!\n\n'
+            'Customized content.\n\n'
+            f'Confirmation code: {self.email_to_verify.confirmation_code}'
         )
-        reset_email.send()
 
-        return response.Response(status=status.HTTP_202_ACCEPTED)
-
+    def get_html_body(self):
+        return (
+            '<h1>YOUR CONTENT HERE!<h1>'
+            '<p>Customized content.</p>'
+            '<p><strong>Confirmation code:</strong>'
+            f'{self.email_to_verify.confirmation_code}</p>'
+        )
 ```
+
+The same applies to the [`PasswordRecoceryEmailMessage`](https://github.com/ramonkcom/drf-launchpad/blob/main/apps/core/mail.py) class.
 
 ---
 
-## Using callbacks
+## Customizing the sending method
 
-To use callbacks, you need to create a function that will be called by the email sending classes and configure it in the settings. This function should be able to receive the defaults of the email message as arguments.
+If you want to use a different email sending method, you can do so by creating your own email sending functions and configuring them in the settings.
 
-For instance:
+First, define your functions (wherever you want):
 
 ```python
-# utils/my_custom_email_callbacks.py
+# apps/core/custom/example.py
 
-def send_confirmation(subject, # str
-                      plain_text, # str
-                      html, # str
-                      sender, # tuple(str, str)
-                      to, # list(tuple(str, str))
-                      cc, # list(tuple(str, str))
-                      bcc, # list(tuple(str, str))
-                      email_instance) # core.Email
+def send_confirmation(verification_email_message)
+    """Sends the email confirmation message.
+
+    Args:
+        verification_email_message (VerificationEmailMessage): The email
+            message to be sent.
+
+    Returns:
+        int: The number of emails sent.
+    """
+
     # Plug the code to send email confirmation here.
     pass
 
-def send_recovery(subject, # str
-                  plain_text, # str
-                  html, # str
-                  sender, # tuple(str, str)
-                  to, # list(tuple(str, str))
-                  cc, # list(tuple(str, str))
-                  bcc, # list(tuple(str, str))
-                  user_instance) # core.User
+def send_recovery(password_recovery_email_message)
+    """Sends the password recovery email message.
+
+    Args:
+        password_recovery_email_message (PasswordRecoceryEmailMessage): The
+            email message to be sent.
+
+    Returns:
+        int: The number of emails sent.
+    """
+
     # Plug the code to send password recovery email here.
     pass
 ```
@@ -126,7 +115,7 @@ Then, in `config/settings/django_general`:
 ```python
 EMAIL_CONFIRMATION = {
     # (...)
-    'SEND_CALLBACK': 'utils.my_custom_email_callbacks.send_confirmation',
+    'SEND_EMAIL_CALLBACK': 'apps.core.custom.example.send_confirmation',
 }
 ```
 
@@ -135,7 +124,7 @@ And in `config/settings/django_auth`:
 ```python
 PASSWORD_RECOVERY = {
     # (...)
-    'SEND_CALLBACK': 'utils.my_custom_email_callbacks.send_recovery',
+    'SEND_EMAIL_CALLBACK': 'apps.core.custom.example.send_recovery',
 }
 ```
 

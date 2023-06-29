@@ -92,8 +92,8 @@ class EmailConfirmationRequestAPIView(generics.GenericAPIView):
                                      status.HTTP_400_BAD_REQUEST)
 
         email.regenerate_confirmation_code(save=True)
-        verification_email = email.get_verification_email()
-        verification_email.send()
+        verification_email_msg = email.get_verification_email_message()
+        verification_email_msg.send()
 
         return response.Response(status=status.HTTP_202_ACCEPTED)
 
@@ -114,8 +114,8 @@ class EmailCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         email = serializer.save(user=self.request.user)
-        verification_email = email.get_verification_email()
-        verification_email.send()
+        verification_email_msg = email.get_verification_email_message()
+        verification_email_msg.send()
 
 
 @extend_schema(tags=['Users', ])

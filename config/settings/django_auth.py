@@ -40,11 +40,12 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # ---------------------------------------------------------------------------- #
-# NOTE: This is a custom setting for the reset password token timeout.
-# TODO: Link documentation for this here.
+# https://github.com/ramonkcom/drf-launchpad/blob/main/docs/custom-settings-and-flags.md#password_recovery
 
-PASSWORD_RESET = {
-    'SEND_CALLBACK': '',
+PASSWORD_RECOVERY = {
+    'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
+    'SEND_EMAIL_CALLBACK': '',
+    'SEND_EMAIL_IN_DEV': False,
     'TOKEN_TIMEOUT': 60 * 60 * 24,
 }
 
