@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
         password_2 = data.pop('password_2', None)
 
         if password_1 != password_2:
-            error_msg = _('Passwords must match.')
+            error_msg = _('The passwords must match.')
             raise serializers.ValidationError(
                 {'password_2': error_msg})
 

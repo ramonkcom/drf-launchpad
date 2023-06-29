@@ -44,7 +44,7 @@ class EmailConfirmationAPIView(generics.GenericAPIView):
             'confirmation_code', '').strip()
 
         if not confirmation_code:
-            error_msg = _('Confirmation code is required.')
+            error_msg = _('The confirmation code is required.')
             return response.Response({'confirmation_code': error_msg},
                                      status.HTTP_400_BAD_REQUEST)
 
@@ -87,7 +87,7 @@ class EmailConfirmationRequestAPIView(generics.GenericAPIView):
         email = self.get_object()
 
         if email.is_confirmed:
-            error_msg = _('The email is already confirmed.')
+            error_msg = _('This email is already confirmed.')
             return response.Response({'non_field_errors': error_msg},
                                      status.HTTP_400_BAD_REQUEST)
 
@@ -146,7 +146,7 @@ class EmailUpdateDestroyAPIView(generics.GenericAPIView):
         is_primary = self.request.data.pop('is_primary', None)
 
         if is_primary is None:
-            error_msg = _('is_primary is required.')
+            error_msg = _('The field `is_primary` is required.')
             return response.Response({'is_primary': error_msg},
                                      status.HTTP_400_BAD_REQUEST)
 

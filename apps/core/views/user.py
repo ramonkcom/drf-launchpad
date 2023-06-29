@@ -86,13 +86,13 @@ class PasswordResetAPIView(views.APIView):
         user_id = data.pop('user_id')
         user = User.objects.filter(pk=user_id).first()
         if not user:
-            error_msg = {'user_id': _('User does not exist.'), }
+            error_msg = {'user_id': _('The user does not exist.'), }
             return response.Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
         reset_token = data.pop('reset_token')
         if not user.check_reset_token(reset_token):
             error_msg = {'reset_token': _(
-                'Request is invalid or has expired.')}
+                'The token is invalid or has expired.')}
             return response.Response(error_msg, status=status.HTTP_403_FORBIDDEN)
 
         serializer = UserSerializer(
