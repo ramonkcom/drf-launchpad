@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.mail import VerificationEmailMessage
+from ..mail import VerificationEmailMessage
 
 
 class Email(models.Model):
@@ -154,7 +154,7 @@ class Email(models.Model):
         """
 
         message_kwargs = {
-            'email': self
+            'email_to_verify': self
         }
         message_kwargs.update(kwargs)
 

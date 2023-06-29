@@ -63,8 +63,8 @@ _¹ These endpoints will send emails to the user, so you have to **configure the
 
 The following features are planned for the next releases:
 
+- [x] Use Django native email functionality in the architecture
 - [ ] Include Brazilian Portuguese translations
-- [ ] Use Django native email functionality in the architecture
 - [ ] Add authentication via Google, Facebook, Twitter and Github
 - [ ] Rewrite the documentation using [MkDocs](https://www.mkdocs.org/) or [Sphinx](https://www.sphinx-doc.org/)
 
@@ -89,6 +89,9 @@ Of course, you don't need to read all the sections from top to bottom. They are 
   - [The `UserFactory`](./docs/custom-user-model.md#the-userfactory)
 - [Permissions](./docs/permissions.md)
 - [Email sending](./docs/email-sending.md)
+  - [Configuring Django mail system](./docs/email-sending.md#configuring-django-mail-system)
+  - [Customizing the email content](./docs/email-sending.md#customizing-the-email-content)
+  - [Customizing the sending method](./docs/email-sending.md#customizing-the-sending-method)
 - [Custom settings and flags](./docs/custom-settings-and-flags.md)
   - [`EMAIL_CONFIRMATION`](./docs/custom-settings-and-flags.md#email_confirmation)
   - [`PASSWORD_RECOVERY`](./docs/custom-settings-and-flags.md#password_recovery)

@@ -13,10 +13,10 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.mail import PasswordResetEmailMessage
 
-from .profile import Profile
+from ..mail import PasswordRecoveryEmailMessage
 from ..managers import UserManager
+from .profile import Profile
 
 
 class User(AbstractBaseUser,
@@ -302,4 +302,4 @@ class User(AbstractBaseUser,
         }
         message_kwargs.update(kwargs)
 
-        return PasswordResetEmailMessage(**message_kwargs)
+        return PasswordRecoveryEmailMessage(**message_kwargs)

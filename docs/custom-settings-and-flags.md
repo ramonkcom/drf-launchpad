@@ -12,7 +12,7 @@ There is also two flags: [`TESTING`](#testing), which is automatically set to `T
 
 ## `EMAIL_CONFIRMATION`
 
-The `EMAIL_CONFIRMATION` setting is located in the `config/settings/django_general.py` file. It is used to configure the email confirmation process.
+The `EMAIL_CONFIRMATION` setting is located in the `config/settings/django_email.py` file. It is used to configure the email confirmation process.
 
 ```python
 EMAIL_CONFIRMATION = {
