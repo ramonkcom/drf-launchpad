@@ -230,7 +230,7 @@ class User(AbstractBaseUser,
         super().clean()
 
         if not self.email:
-            error_msg = _('Email address is required.')
+            error_msg = _('The email address is required.')
             raise exceptions.ValidationError({'email': error_msg})
 
         self.email = self._meta.model.objects.normalize_email(self.email)
