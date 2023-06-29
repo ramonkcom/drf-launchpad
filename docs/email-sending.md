@@ -126,7 +126,7 @@ Then, in `config/settings/django_general`:
 ```python
 EMAIL_CONFIRMATION = {
     # (...)
-    'SEND_CALLBACK': 'utils.my_custom_email_callbacks.send_confirmation',
+    'SEND_EMAIL_CALLBACK': 'utils.my_custom_email_callbacks.send_confirmation',
 }
 ```
 
@@ -135,7 +135,7 @@ And in `config/settings/django_auth`:
 ```python
 PASSWORD_RECOVERY = {
     # (...)
-    'SEND_CALLBACK': 'utils.my_custom_email_callbacks.send_recovery',
+    'SEND_EMAIL_CALLBACK': 'utils.my_custom_email_callbacks.send_recovery',
 }
 ```
 

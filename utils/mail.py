@@ -284,11 +284,11 @@ class VerificationEmailMessage(EmailMessage):
             print('='*80, '\n')
 
     def send(self):
-        if ('SEND_CALLBACK' not in settings.EMAIL_CONFIRMATION
-                or not settings.EMAIL_CONFIRMATION['SEND_CALLBACK']):
+        if ('SEND_EMAIL_CALLBACK' not in settings.EMAIL_CONFIRMATION
+                or not settings.EMAIL_CONFIRMATION['SEND_EMAIL_CALLBACK']):
             return super().send()
 
-        callback_name = settings.EMAIL_CONFIRMATION['SEND_CALLBACK']
+        callback_name = settings.EMAIL_CONFIRMATION['SEND_EMAIL_CALLBACK']
         send_confirmation_email = self.get_send_callback(callback_name)
         return send_confirmation_email(subject=self.subject,
                                        plain_text=self.get_plain_text_body(),
@@ -426,11 +426,11 @@ class PasswordResetEmailMessage(EmailMessage):
             print('='*80, '\n')
 
     def send(self):
-        if ('SEND_CALLBACK' not in settings.PASSWORD_RESET
-                or not settings.PASSWORD_RESET['SEND_CALLBACK']):
+        if ('SEND_EMAIL_CALLBACK' not in settings.PASSWORD_RESET
+                or not settings.PASSWORD_RESET['SEND_EMAIL_CALLBACK']):
             return super().send()
 
-        callback_name = settings.PASSWORD_RESET['SEND_CALLBACK']
+        callback_name = settings.PASSWORD_RESET['SEND_EMAIL_CALLBACK']
         send_recovery_email = self.get_send_callback(callback_name)
         return send_recovery_email(subject=self.subject,
                                    plain_text=self.get_plain_text_body(),

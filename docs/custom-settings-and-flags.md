@@ -23,14 +23,14 @@ EMAIL_CONFIRMATION = {
     'CODE_TIMEOUT': 60 * 60 * 24,
 
     # The callback to send the email confirmation
-    'SEND_CALLBACK': '',
+    'SEND_EMAIL_CALLBACK': '',
 
     # Whether to send the email even in development
     'SEND_EMAIL_IN_DEV': False,
 }
 ```
 
-You can read more about the `SEND_CALLBACK` setting in the [email sending section](./email-sending.md#using-callbacks).
+You can read more about the `SEND_EMAIL_CALLBACK` setting in the [email sending section](./email-sending.md#using-callbacks).
 
 ---
 
@@ -44,7 +44,7 @@ PASSWORD_RESET = {
     'FRONTEND_BASE_URL': 'https://FRONTEND_URL/PASSWORD_RESET_PATH/',
 
     # The callback to send the password recovery email
-    'SEND_CALLBACK': '',
+    'SEND_EMAIL_CALLBACK': '',
 
     # Whether to send the recovery email even in development
     'SEND_EMAIL_IN_DEV': False,
@@ -54,7 +54,7 @@ PASSWORD_RESET = {
 }
 ```
 
-You can read more about the `SEND_CALLBACK` setting in the [email sending section](./email-sending.md#using-callbacks).
+You can read more about the `SEND_EMAIL_CALLBACK` setting in the [email sending section](./email-sending.md#using-callbacks).
 
 ---
 

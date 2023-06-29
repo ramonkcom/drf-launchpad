@@ -58,7 +58,7 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@localhost')
 EMAIL_CONFIRMATION = {
     'FRONTEND_BASE_URL': 'https://FRONTEND_URL/CONFIRM_EMAIL_PATH/',
     'CODE_TIMEOUT': 60 * 60 * 24,
-    'SEND_CALLBACK': '',
+    'SEND_EMAIL_CALLBACK': '',
     'SEND_EMAIL_IN_DEV': False,
 }
 
