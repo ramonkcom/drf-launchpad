@@ -1,0 +1,266 @@
+# DRF LAUNCHPAD.
+# Copyright (C) 2023
+# This file is distributed under the MIT License.
+# Ramon K. <contato@ramonk.com>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-29 11:46-0300\n"
+"Last-Translator: Ramon Kayo <contato@ramonk.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+#: admin/email.py:22
+msgid "You cannot delete the primary email."
+msgstr "Você não pode deletar o email principal."
+
+#: admin/email.py:30 models/email.py:25 models/user.py:68
+msgid "email"
+msgstr "email"
+
+#: admin/profile.py:11
+msgid "profile information"
+msgstr "informações do perfil"
+
+#: admin/user.py:34
+msgid "Credentials"
+msgstr "Credenciais"
+
+#: admin/user.py:41
+msgid "Roles"
+msgstr "Papéis"
+
+#: admin/user.py:46
+msgid "Permissions"
+msgstr "Permissões"
+
+#: mail.py:122
+msgid "A value for `email_to_verify` is required."
+msgstr "Um valor para `email_to_verify` é obrigatório."
+
+#: mail.py:126
+msgid "`email_to_verify` must be an instance of `Email`."
+msgstr "`email_to_verify` precisa ser uma instância de `Email`."
+
+#: mail.py:132
+msgid "Verify your email address"
+msgstr "Verifique seu endereço de email"
+
+#: mail.py:160
+msgid "Just one more step: verify your email address"
+msgstr "Apenas mais um passo: verifique seu endereço de email"
+
+#: mail.py:162
+#, python-format
+msgid ""
+"Use the link below to verify this email address on your account. If you "
+"prefer, you can also copy and paste the link directly into your browser. "
+"This link will expire in %(n)s hours."
+msgstr ""
+"Use o link abaixo para verificar este endereço de email em sua conta. Se "
+"preferir, você também pode copiar e colar o link diretamente em seu "
+"navegador. Este link expirará em %(n)s horas."
+
+#: mail.py:168
+msgid "Verify email address"
+msgstr "Verificar endereço de email"
+
+#: mail.py:170
+msgid ""
+"If you did not create an account with this email address, don't worry: you "
+"can safely ignore this email."
+msgstr ""
+"Se você não criou uma conta com este endereço de email, não se preocupe: "
+"você pode ignorá-lo com segurança."
+
+#: mail.py:242
+msgid "A value for `user` is required."
+msgstr "Um valor para `user` é obrigatório."
+
+#: mail.py:246
+msgid "`user` must be an instance of `User`."
+msgstr "`user` precisa ser uma instância de `User`."
+
+#: mail.py:252
+msgid "Reset your password"
+msgstr "Redefina sua senha"
+
+#: mail.py:280
+msgid "Set a new password"
+msgstr "Escolha uma nova senha"
+
+#: mail.py:282
+#, python-format
+msgid ""
+"Use the link below to set a new password for your account. If you prefer, "
+"you can also copy and paste the link directly into your browser. This link "
+"will expire in %(n)s hours."
+msgstr ""
+"Use o link abaixo para definir uma nova senha para sua conta. Se preferir, "
+"você também pode copiar e colar o link diretamente em seu navegador. Este "
+"link expirará em %(n)s horas."
+
+#: mail.py:288
+msgid "Reset password"
+msgstr "Redefinir senha"
+
+#: mail.py:290
+msgid ""
+"If you did not ask for a password reset, don't worry: you can safely ignore "
+"this email."
+msgstr ""
+"Se você não solicitou uma redefinição de senha, não se preocupe: você pode "
+"ignorar este email com segurança."
+
+#: models/email.py:26
+msgid "emails"
+msgstr "emails"
+
+#: models/email.py:33
+msgid "Default Sign Up"
+msgstr "Cadastro Padrão"
+
+#: models/email.py:34
+msgid "Admin"
+msgstr "Admin"
+
+#: models/email.py:35
+msgid "User Input"
+msgstr "Entrada do Usuário"
+
+#: models/email.py:48
+msgid "address"
+msgstr "endereço"
+
+#: models/email.py:53
+msgid "confirmation code"
+msgstr "código de confirmação"
+
+#: models/email.py:58
+msgid "confirmation code date"
+msgstr "data do código de confirmação"
+
+#: models/email.py:64
+msgid "confirmation date"
+msgstr "data de confirmação"
+
+#: models/email.py:71
+msgid "origin"
+msgstr "origem"
+
+#: models/email.py:78 models/profile.py:35 models/user.py:44
+msgid "user"
+msgstr "usuário"
+
+#: models/profile.py:18
+msgid "profile"
+msgstr "perfil"
+
+#: models/profile.py:19
+msgid "profiles"
+msgstr "perfis"
+
+#: models/profile.py:43
+msgid "given name"
+msgstr "nome"
+
+#: models/profile.py:51
+msgid "family name"
+msgstr "sobrenome"
+
+#: models/user.py:45
+msgid "users"
+msgstr "usuários"
+
+#: models/user.py:62
+msgid "date joined"
+msgstr "data de cadastro"
+
+#: models/user.py:73
+msgid "is active?"
+msgstr "está ativo?"
+
+#: models/user.py:78
+msgid "is staff?"
+msgstr "é staff?"
+
+#: models/user.py:85
+msgid "reset token"
+msgstr "token de redefinição"
+
+#: models/user.py:92
+msgid "reset token date"
+msgstr "data do token de redefinição"
+
+#: models/user.py:96
+msgid "username"
+msgstr "nome de usuário"
+
+#: models/user.py:102
+msgid "31 characters or fewer. Letters, digits and ./_ only."
+msgstr "31 caracteres ou menos. Apenas letras, dígitos e ./_."
+
+#: models/user.py:108
+msgid "An user with that username already exists."
+msgstr "Um usuário com esse nome de usuário já existe."
+
+#: models/user.py:233
+msgid "The email address is required."
+msgstr "O endereço de email é necessário."
+
+#: serializers/user.py:48
+msgid "The passwords must match."
+msgstr "As senhas devem coincidir."
+
+#: signals/profile.py:28
+msgid "Can't delete a profile directly."
+msgstr "Não é possível deletar um perfil diretamente."
+
+#: views/email.py:47
+msgid "The confirmation code is required."
+msgstr "O código de confirmação é necessário."
+
+#: views/email.py:54
+msgid "The confirmation code is invalid or has expired."
+msgstr "O código de confirmação é inválido ou expirou."
+
+#: views/email.py:90
+msgid "This email is already confirmed."
+msgstr "Este email já está confirmado."
+
+#: views/email.py:149
+msgid "The field `is_primary` is required."
+msgstr "O campo `is_primary` é necessário."
+
+#: views/email.py:154
+msgid ""
+"You cannot directly make an email not primary. Set another email as primary "
+"instead."
+msgstr ""
+"Você não pode tornar um email não principal diretamente. Defina outro email "
+"como principal em vez disso."
+
+#: views/email.py:161
+msgid "You cannot set an unconfirmed email as primary email."
+msgstr "Você não pode definir um email não confirmado como email principal."
+
+#: views/email.py:179
+msgid "You cannot delete your primary email."
+msgstr "Você não pode deletar seu email principal."
+
+#: views/user.py:41 views/user.py:83
+msgid "This field is required."
+msgstr "Este campo é obrigatório."
+
+#: views/user.py:89
+msgid "The user does not exist."
+msgstr "O usuário não existe."
+
+#: views/user.py:95
+msgid "The token is invalid or has expired."
+msgstr "O token é inválido ou expirou."

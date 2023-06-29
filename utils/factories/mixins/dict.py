@@ -15,7 +15,7 @@ class DictFactoryMixin:
 
         def check_field(field):
             if field in include_fields and field in exclude_fields:
-                error_msg = _('Field `%(field_name)s` cannot be included and '
+                error_msg = _('The field `%(field_name)s` cannot be included and '
                               'excluded at the same time.') % {'field_name': field, }
                 raise ValueError(error_msg)
 
