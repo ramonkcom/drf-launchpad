@@ -138,7 +138,7 @@ class Email(models.Model):
             return False
 
         expiration_date = self.confirmation_code_date + timezone.timedelta(
-            seconds=settings.EMAIL_CONFIRMATION['CODE_TIMEOUT']
+            seconds=settings.EMAIL_CONFIRMATION.get('CODE_TIMEOUT', (60*60*24))
         )
 
         return all([
